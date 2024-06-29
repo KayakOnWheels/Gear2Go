@@ -3,7 +3,7 @@ package com.gear2go.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -16,7 +16,7 @@ public class Order {
     private Long id;
 
     @Column(name = "order_date", nullable = false)
-    private LocalDateTime date;
+    private LocalDate orderDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
