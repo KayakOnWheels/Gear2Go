@@ -17,7 +17,7 @@ public class Cart {
     private Long id;
 
     @OneToOne
-    private User userId;
+    private User user;
 
     @Column(name = "rent_date", nullable = false)
     private LocalDateTime rentDate;
@@ -28,6 +28,6 @@ public class Cart {
     @OneToMany(targetEntity = CartItem.class,
             mappedBy = "cart",
             fetch = FetchType.LAZY)
-    private List<CartItem> cartItemId;
+    private List<CartItem> cartItemList;
 
 }
