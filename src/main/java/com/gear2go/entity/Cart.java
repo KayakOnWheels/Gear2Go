@@ -3,7 +3,7 @@ package com.gear2go.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -20,10 +20,10 @@ public class Cart {
     private User user;
 
     @Column(name = "rent_date", nullable = false)
-    private LocalDateTime rentDate;
+    private LocalDate rentDate;
 
     @Column(name = "return_date", nullable = false)
-    private LocalDateTime returnDate;
+    private LocalDate returnDate;
 
     @OneToMany(targetEntity = CartItem.class,
             mappedBy = "cart",
