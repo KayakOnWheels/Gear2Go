@@ -22,7 +22,7 @@ public class CartItem {
     private BigDecimal price = BigDecimal.ZERO;
 
     @Column(name = "weight", nullable = false)
-    private float weight;
+    private Float weight;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
