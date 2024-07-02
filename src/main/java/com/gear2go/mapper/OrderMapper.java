@@ -2,9 +2,11 @@ package com.gear2go.mapper;
 
 import com.gear2go.dto.response.OrderResponse;
 import com.gear2go.entity.Order;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class OrderMapper {
 
     public OrderResponse toOrderResponse(Order order) {
