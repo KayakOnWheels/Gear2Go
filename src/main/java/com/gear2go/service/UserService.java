@@ -6,15 +6,17 @@ import com.gear2go.dto.response.UserResponse;
 import com.gear2go.entity.User;
 import com.gear2go.mapper.UserMapper;
 import com.gear2go.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    
-    UserRepository userRepository;
-    UserMapper userMapper;
+
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     public List<UserResponse> getAllUsers() {
         return userMapper.toUserResponseList(userRepository.findAll());

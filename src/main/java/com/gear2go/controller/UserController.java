@@ -4,16 +4,18 @@ import com.gear2go.dto.request.user.CreateUserRequest;
 import com.gear2go.dto.request.user.UpdateUserRequest;
 import com.gear2go.dto.response.UserResponse;
 import com.gear2go.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1/user")
 public class UserController {
 
-    UserService userService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers() {

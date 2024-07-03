@@ -4,16 +4,19 @@ import com.gear2go.dto.request.product.CreateProductRequest;
 import com.gear2go.dto.request.product.UpdateProductRequest;
 import com.gear2go.dto.response.ProductResponse;
 import com.gear2go.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1/product")
 public class ProductController {
 
-    ProductService productService;
+    private final ProductService productService;
+
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());

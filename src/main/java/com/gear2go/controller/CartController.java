@@ -4,6 +4,7 @@ import com.gear2go.dto.request.cart.CreateCartRequest;
 import com.gear2go.dto.request.cart.UpdateCartRequest;
 import com.gear2go.dto.response.CartResponse;
 import com.gear2go.service.CartService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,9 +12,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("v1/cart")
+@RequiredArgsConstructor
 public class CartController {
 
-    CartService cartService;
+    private final CartService cartService;
+
     @GetMapping
     public ResponseEntity<List<CartResponse>> getAllCarts() {
         return ResponseEntity.ok(cartService.getAllCarts());

@@ -6,15 +6,17 @@ import com.gear2go.dto.response.ProductResponse;
 import com.gear2go.entity.Product;
 import com.gear2go.mapper.ProductMapper;
 import com.gear2go.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
-    ProductRepository productRepository;
-    ProductMapper productMapper;
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     public List<ProductResponse> getAllProducts() {
         return productMapper.toProductResponseList(productRepository.findAll());

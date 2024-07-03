@@ -7,16 +7,18 @@ import com.gear2go.entity.Cart;
 import com.gear2go.mapper.CartMapper;
 import com.gear2go.repository.CartRepository;
 import com.gear2go.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CartService {
-    
-    CartRepository cartRepository;
-    UserRepository userRepository;
-    CartMapper cartMapper;
+
+    private final CartRepository cartRepository;
+    private final UserRepository userRepository;
+    private final CartMapper cartMapper;
     
     public List<CartResponse> getAllCarts() {
         return cartMapper.toCartResponseList(cartRepository.findAll());
