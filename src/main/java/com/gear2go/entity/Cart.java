@@ -30,4 +30,9 @@ public class Cart {
             fetch = FetchType.LAZY)
     private List<CartItem> cartItemList;
 
+    public Cart(User user, LocalDate rentDate, LocalDate returnDate) {
+        this.user = user;
+        this.rentDate = rentDate;
+        this.returnDate = returnDate;
+    }
 }

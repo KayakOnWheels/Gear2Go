@@ -18,7 +18,7 @@ public class CartMapper {
         );
     }
 
-    public List<CartResponse> toCartList(List<Cart> cartList) {
+    public List<CartResponse> toCartResponseList(List<Cart> cartList) {
         return cartList.stream()
                 .map(this::toCartResponse)
                 .toList();

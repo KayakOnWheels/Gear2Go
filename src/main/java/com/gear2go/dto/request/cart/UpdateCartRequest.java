@@ -1,6 +1,9 @@
 package com.gear2go.dto.request.cart;
 
-import java.time.LocalDate;
+import com.gear2go.entity.CartItem;
 
-public record UpdateCartRequest (Long id, Long userId, LocalDate rentDate, LocalDate returnDate) {
+import java.time.LocalDate;
+import java.util.List;
+
+public record UpdateCartRequest (Long id, LocalDate rentDate, LocalDate returnDate, List<CartItem> cartItemList) {
 }
