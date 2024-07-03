@@ -1,10 +1,14 @@
 package com.gear2go.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "address")
 public class Address {
 
@@ -31,4 +35,14 @@ public class Address {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+
+    public Address(String street, String buildingNumber, String apartmentNumber, String postalCode, String city, User user) {
+        this.street = street;
+        this.buildingNumber = buildingNumber;
+        this.apartmentNumber = apartmentNumber;
+        this.postalCode = postalCode;
+        this.city = city;
+        this.user = user;
+    }
 }
