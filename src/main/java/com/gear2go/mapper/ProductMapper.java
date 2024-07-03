@@ -19,7 +19,7 @@ public class ProductMapper {
         );
     }
 
-    public List<ProductResponse> toProductList(List<Product> productList) {
+    public List<ProductResponse> toProductResponseList(List<Product> productList) {
         return productList.stream()
                 .map(this::toProductResponse)
                 .toList();

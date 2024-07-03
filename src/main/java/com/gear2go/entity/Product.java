@@ -2,12 +2,14 @@ package com.gear2go.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "product")
 public class Product {
 
@@ -32,4 +34,11 @@ public class Product {
             mappedBy = "product",
             fetch = FetchType.LAZY)
     private List<CartItem> cartItemList;
+
+    public Product(String name, float weight, BigDecimal price, Integer stock) {
+        this.name = name;
+        this.weight = weight;
+        this.price = price;
+        this.stock = stock;
+    }
 }
