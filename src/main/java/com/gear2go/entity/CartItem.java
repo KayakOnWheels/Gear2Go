@@ -2,11 +2,13 @@ package com.gear2go.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "cart_item")
 public class CartItem {
 
@@ -31,4 +33,12 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
+
+    public CartItem(Integer quantity, BigDecimal price, Float weight, Product product, Cart cart) {
+        this.quantity = quantity;
+        this.price = price;
+        this.weight = weight;
+        this.product = product;
+        this.cart = cart;
+    }
 }

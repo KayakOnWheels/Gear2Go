@@ -4,6 +4,7 @@ import com.gear2go.dto.request.address.CreateAddressRequest;
 import com.gear2go.dto.request.address.UpdateAddressRequest;
 import com.gear2go.dto.response.AddressResponse;
 import com.gear2go.entity.Address;
+import com.gear2go.exception.AddressNotFoundException;
 import com.gear2go.mapper.AddressMapper;
 import com.gear2go.repository.AddressRepository;
 import com.gear2go.repository.UserRepository;
@@ -26,8 +27,8 @@ public class AddressService {
         return addressMapper.toAddressResponseList(addressList);
     }
 
-    public AddressResponse getAddress(Long id) {
-        return addressMapper.toAddressResponse(addressRepository.findById(id).orElseThrow());
+    public AddressResponse getAddress(Long id) throws AddressNotFoundException{
+        return addressMapper.toAddressResponse(addressRepository.findById(id).orElseThrow(() -> new AddressNotFoundException(id)));
     }
 
     public AddressResponse createAddress(CreateAddressRequest createAddressRequest) {

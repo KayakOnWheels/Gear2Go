@@ -1,7 +1,8 @@
 package com.gear2go.controller;
 
+import com.gear2go.dto.request.cart.AddProductToCartRequest;
 import com.gear2go.dto.request.cart.CreateCartRequest;
-import com.gear2go.dto.request.cart.UpdateCartRequest;
+import com.gear2go.dto.request.cart.UpdateCartRentDatesRequest;
 import com.gear2go.dto.response.CartResponse;
 import com.gear2go.service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +33,14 @@ public class CartController {
         return ResponseEntity.ok(cartService.createEmptyCart(createCartRequest));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CartResponse> updateCartRentDates(@PathVariable Long id, @RequestBody UpdateCartRentDatesRequest updateCartRentDatesRequest) {
+        return ResponseEntity.ok(cartService.updateCartRentDates(id, updateCartRentDatesRequest));
+    }
+
     @PutMapping
-    public ResponseEntity<CartResponse> updateCart(@RequestBody UpdateCartRequest updateCartRequest) {
-        return ResponseEntity.ok(cartService.updateCart(updateCartRequest));
+    public ResponseEntity<CartResponse> addProductToCart(@RequestBody AddProductToCartRequest addProductToCartRequest) {
+        return ResponseEntity.ok(cartService.addProductToCart(addProductToCartRequest));
     }
 
     @DeleteMapping("/{id}")

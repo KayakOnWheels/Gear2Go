@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
+@NamedQuery(
+        name = "Product.findNumberOfProductsRentedInDataRange",
+        query = "SELECT SUM(ci.quantity) FROM CartItem ci WHERE ci.product.id = :ID AND ci.cart.rentDate >= :RENT_DATE AND ci.cart.returnDate <= :RETURN_DATE"
+)
 @Data
 @Entity
 @NoArgsConstructor

@@ -9,6 +9,7 @@ import com.gear2go.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -53,5 +54,13 @@ public class ProductService {
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id).orElseThrow();
         productRepository.delete(product);
+    }
+
+    public Integer checkProductAvailabilityInDateRange(Long id, LocalDate rentDate, LocalDate returnDate) {
+        Product product = productRepository.findById(id).orElseThrow();
+
+        Integer rentedInDataRange = productRepository.findNumberOfProductsRentedInDataRange(id, rentDate, returnDate);
+
+        return product.getStock() - rentedInDataRange;
     }
 }

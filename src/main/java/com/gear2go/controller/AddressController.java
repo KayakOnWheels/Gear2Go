@@ -3,6 +3,7 @@ package com.gear2go.controller;
 import com.gear2go.dto.request.address.CreateAddressRequest;
 import com.gear2go.dto.request.address.UpdateAddressRequest;
 import com.gear2go.dto.response.AddressResponse;
+import com.gear2go.exception.AddressNotFoundException;
 import com.gear2go.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class AddressController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AddressResponse> getAddressById(@PathVariable Long id) {
+    public ResponseEntity<AddressResponse> getAddressById(@PathVariable Long id) throws AddressNotFoundException {
         return ResponseEntity.ok(addressService.getAddress(id));
     }
 
