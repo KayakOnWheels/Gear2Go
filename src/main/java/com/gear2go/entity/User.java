@@ -30,6 +30,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name="auth_token")
+    private Integer authToken;
+
     @OneToMany(targetEntity = Order.class,
             mappedBy = "user",
             orphanRemoval = true,

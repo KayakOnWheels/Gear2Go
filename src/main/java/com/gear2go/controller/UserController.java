@@ -2,6 +2,8 @@ package com.gear2go.controller;
 
 import com.gear2go.dto.request.user.CreateUserRequest;
 import com.gear2go.dto.request.user.UpdateUserRequest;
+import com.gear2go.dto.request.user.UserCredentialsRequest;
+import com.gear2go.dto.response.LoginValidationStatusResponse;
 import com.gear2go.dto.response.UserResponse;
 import com.gear2go.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,12 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginValidationStatusResponse> login(@RequestBody UserCredentialsRequest userCredentialsRequest) {
+
+        return ResponseEntity.ok(userService.loginValidation(userCredentialsRequest));
     }
     
 }

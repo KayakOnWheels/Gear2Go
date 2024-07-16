@@ -2,6 +2,8 @@ package com.gear2go.service;
 
 import com.gear2go.dto.request.user.CreateUserRequest;
 import com.gear2go.dto.request.user.UpdateUserRequest;
+import com.gear2go.dto.request.user.UserCredentialsRequest;
+import com.gear2go.dto.response.LoginValidationStatusResponse;
 import com.gear2go.dto.response.UserResponse;
 import com.gear2go.entity.User;
 import com.gear2go.mapper.UserMapper;
@@ -9,6 +11,7 @@ import com.gear2go.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 @Service
@@ -53,6 +56,21 @@ public class UserService {
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow();
         userRepository.delete(user);
+    }
+
+    public LoginValidationStatusResponse loginValidation(UserCredentialsRequest userCredentialsRequest) {
+
+        User user = userRepository.findUserByMail(userCredentialsRequest.mail()).orElseThrow();
+
+        if(user.getPassword().equals(userCredentialsRequest.password())) {
+            SecureRandom random = new SecureRandom();
+            Integer authToken = random.nextInt();
+            user.setAuthToken(authToken);
+            userRepository.save(user);
+
+            return new LoginValidationStatusResponse("OK");
+        }
+        return new LoginValidationStatusResponse("Bad Credentials");
     }
     
 }

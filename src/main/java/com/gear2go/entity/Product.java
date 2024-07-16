@@ -45,4 +45,12 @@ public class Product {
         this.price = price;
         this.stock = stock;
     }
+
+    public Product(Long id, String name, float weight, BigDecimal price, Integer stock) {
+        this.id = id;
+        this.name = name;
+        this.weight = weight;
+        this.price = price;
+        this.stock = stock;
+    }
 }
