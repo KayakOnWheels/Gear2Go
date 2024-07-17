@@ -18,7 +18,7 @@ public class OrderMapper {
         );
     }
 
-    public List<OrderResponse> toOrderList(List<Order> orderList) {
+    public List<OrderResponse> toOrderResponseList(List<Order> orderList) {
         return orderList.stream()
                 .map(this::toOrderResponse)
                 .toList();

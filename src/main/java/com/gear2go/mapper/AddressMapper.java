@@ -20,7 +20,7 @@ public class AddressMapper {
         );
     }
 
-    public List<AddressResponse> toAddressList(List<Address> addressList) {
+    public List<AddressResponse> toAddressResponseList(List<Address> addressList) {
         return addressList.stream()
                 .map(this::toAddressResponse)
                 .toList();

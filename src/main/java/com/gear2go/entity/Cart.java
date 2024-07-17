@@ -2,6 +2,7 @@ package com.gear2go.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "cart")
+@NoArgsConstructor
 public class Cart {
 
     @Id
@@ -30,4 +32,9 @@ public class Cart {
             fetch = FetchType.LAZY)
     private List<CartItem> cartItemList;
 
+    public Cart(User user, LocalDate rentDate, LocalDate returnDate) {
+        this.user = user;
+        this.rentDate = rentDate;
+        this.returnDate = returnDate;
+    }
 }
