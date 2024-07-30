@@ -2,16 +2,16 @@ package com.gear2go.service;
 
 import com.gear2go.dto.request.user.CreateUserRequest;
 import com.gear2go.dto.request.user.UpdateUserRequest;
-import com.gear2go.dto.request.user.UserCredentialsRequest;
-import com.gear2go.dto.response.LoginValidationStatusResponse;
 import com.gear2go.dto.response.UserResponse;
+import com.gear2go.entity.Role;
 import com.gear2go.entity.User;
 import com.gear2go.mapper.UserMapper;
 import com.gear2go.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.util.List;
 
 @Service
@@ -20,6 +20,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final AuthenticationService authenticationService;
 
     public List<UserResponse> getAllUsers() {
         return userMapper.toUserResponseList(userRepository.findAll());
@@ -54,23 +55,16 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow();
-        userRepository.delete(user);
-    }
-
-    public LoginValidationStatusResponse loginValidation(UserCredentialsRequest userCredentialsRequest) {
-
-        User user = userRepository.findUserByMail(userCredentialsRequest.mail()).orElseThrow();
-
-        if(user.getPassword().equals(userCredentialsRequest.password())) {
-            SecureRandom random = new SecureRandom();
-            Integer authToken = random.nextInt();
-            user.setAuthToken(authToken);
-            userRepository.save(user);
-
-            return new LoginValidationStatusResponse("OK");
+        String mail;
+        Authentication authentication = authenticationService.getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            mail = authentication.getName();
+            User currentUser = userRepository.findUserByMail(mail).orElseThrow();
+            User userToRemove = userRepository.findById(id).orElseThrow();
+            if (currentUser.getRole().equals(Role.ADMIN) || currentUser.getMail().equals(userToRemove.getMail())) {
+                userRepository.delete(userToRemove);
+            }
         }
-        return new LoginValidationStatusResponse("Bad Credentials");
     }
-    
+
 }

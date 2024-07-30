@@ -1,7 +1,6 @@
-package com.gear2go.config;
+package com.gear2go.service;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -18,7 +17,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "FF613DA5E3448B49537483F399507FAF5E8242B1E994906876C938AEBD48DC69756772491DBAF3F0EE8078B624E9482CC0DF256A530A0E9ABDB2011B767EA2F3282561880AE2A5E41D187AC1CB969BA4B58F0738CE94142C2BD179CA541638C91295A78EBB952ECC1480BFD5B605A5102238E8AF92DB3BBF67729B795B89A25D";
+    private static final String SECRET_KEY = "04c13f18adbd7cb5194a3341c6c1afcb2c71d6f5a5ab07f13e6cb659debdbe71";
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts

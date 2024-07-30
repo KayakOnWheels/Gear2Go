@@ -1,6 +1,8 @@
 package com.gear2go.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +15,9 @@ import java.util.List;
 
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user")
 public class User implements UserDetails {
 
@@ -28,7 +32,7 @@ public class User implements UserDetails {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "mail", nullable = false)
+    @Column(name = "mail", nullable = false, unique = true)
     private String mail;
 
     @Column(name = "password", nullable = false)
@@ -92,3 +96,4 @@ public class User implements UserDetails {
         return true;
     }
 }
+
