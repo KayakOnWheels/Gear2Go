@@ -3,7 +3,7 @@ package com.gear2go.service;
 import com.gear2go.dto.request.user.CreateUserRequest;
 import com.gear2go.dto.request.user.UpdateUserRequest;
 import com.gear2go.dto.response.UserResponse;
-import com.gear2go.entity.Role;
+import com.gear2go.entity.enums.Role;
 import com.gear2go.entity.User;
 import com.gear2go.mapper.UserMapper;
 import com.gear2go.repository.UserRepository;
@@ -35,7 +35,8 @@ public class UserService {
                 createUserRequest.firstName(),
                 createUserRequest.lastName(),
                 createUserRequest.mail(),
-                createUserRequest.password()
+                createUserRequest.password(),
+                Role.USER
         );
 
         userRepository.save(user);
@@ -43,15 +44,25 @@ public class UserService {
     }
 
     public UserResponse updateUser(UpdateUserRequest updateUserRequest) {
-        User user = userRepository.findById(updateUserRequest.id()).orElseThrow();
+        String mail;
+        Authentication authentication = authenticationService.getAuthentication();
+        User userToUpdate = userRepository.findById(updateUserRequest.id()).orElseThrow();
 
-        user.setFirstName(updateUserRequest.firstName());
-        user.setLastName(updateUserRequest.lastName());
-        user.setMail(updateUserRequest.mail());
-        user.setPassword(updateUserRequest.password());
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            mail = authentication.getName();
+            User currentUser = userRepository.findUserByMail(mail).orElseThrow();
 
-        userRepository.save(user);
-        return userMapper.toUserResponse(user);
+            if (currentUser.getRole().equals(Role.ADMIN) || currentUser.getMail().equals(userToUpdate.getMail())) {
+                userToUpdate.setFirstName(updateUserRequest.firstName());
+                userToUpdate.setLastName(updateUserRequest.lastName());
+                userToUpdate.setMail(updateUserRequest.mail());
+                userToUpdate.setPassword(updateUserRequest.password());
+                userRepository.save(userToUpdate);
+                return userMapper.toUserResponse(userToUpdate);
+            }
+            return userMapper.toUserResponse(userToUpdate);
+        }
+        return userMapper.toUserResponse(userToUpdate);
     }
 
     public void deleteUser(Long id) {

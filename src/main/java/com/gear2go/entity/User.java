@@ -1,5 +1,6 @@
 package com.gear2go.entity;
 
+import com.gear2go.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,10 +27,10 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     private String lastName;
 
     @Column(name = "mail", nullable = false, unique = true)
@@ -38,9 +39,13 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     @OneToMany(targetEntity = Order.class,
             mappedBy = "user",
@@ -54,11 +59,18 @@ public class User implements UserDetails {
             fetch = FetchType.LAZY)
     private List<Address> addressList;
 
-    public User(String firstName, String lastName, String mail, String password) {
+    public User(String firstName, String lastName, String mail, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.mail = mail;
         this.password = password;
+        this.role = role;
+    }
+
+    public User(String mail, String password, Role role) {
+        this.mail = mail;
+        this.password = password;
+        this.role = role;
     }
 
     @Override
