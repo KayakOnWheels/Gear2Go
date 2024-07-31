@@ -39,7 +39,7 @@ public class CartController {
     }
 
     @PutMapping
-    public ResponseEntity<CartResponse> addProductToCart(@RequestBody AddProductToCartRequest addProductToCartRequest) {
+    public ResponseEntity<CartResponse> addProductToCart(@RequestBody AddProductToCartRequest addProductToCartRequest) throws Exception{
         return ResponseEntity.ok(cartService.addProductToCart(addProductToCartRequest));
     }
 
