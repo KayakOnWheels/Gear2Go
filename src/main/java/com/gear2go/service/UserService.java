@@ -85,11 +85,11 @@ public class UserService {
     public String sendRecoveryMail(RequestPasswordRecoveryRequest requestPasswordRecoveryRequest) throws ExceptionWithHttpStatusCode{
         String token = authenticationService.authenticateGuest().getToken();
 
-        Mail mail = new Mail(requestPasswordRecoveryRequest.mail(), "Forgot Password?", "Click to reset: " + endpoints.getRecovery()+token);
+        Mail mail = new Mail(requestPasswordRecoveryRequest.mail(), "Forgot Password?", token);
 
         emailService.send(mail);
 
-        return "Recovery mail was sent";
+        return "Recovery mail has been sent";
     }
 
 }

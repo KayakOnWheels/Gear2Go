@@ -54,6 +54,7 @@ public class SecurityConfiguration {
                                 "v1/auth/**",
                                 "v1/weather/**",
                                 "v1/auth/authenticate/guest",
+                                "v1/user/request-recovery",
                                 "v1/product/**",
                                 "v1/user/**",
                                 "v1/product/availability",
