@@ -78,11 +78,12 @@ public class AuthenticationService implements AuthenticationFacade {
         if (jwtService.isTokenValid(passwordRecoveryRequest.token(), temporaryUser)) {
             User userToRecover = userRepository.findUserByMail(passwordRecoveryRequest.mail()).orElseThrow(UserNotFoundException::new);
 
-            userToRecover.setPassword(passwordRecoveryRequest.newPassword());
+            userToRecover.setPassword(passwordEncoder.encode(passwordRecoveryRequest.newPassword()));
             userRepository.save(userToRecover);
             userRepository.delete(temporaryUser);
             return "Success";
         }
+        userRepository.delete(temporaryUser);
         throw new TokenExpiredException();
     }
 
