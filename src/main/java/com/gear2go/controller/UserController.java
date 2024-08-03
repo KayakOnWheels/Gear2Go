@@ -20,7 +20,6 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final AuthenticationService authenticationService;
 
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers() {
@@ -35,11 +34,6 @@ public class UserController {
     @PostMapping("/request-recovery")
     public ResponseEntity<String> sendRecoveryMail(@RequestBody RequestPasswordRecoveryRequest requestPasswordRecoveryRequest) throws ExceptionWithHttpStatusCode{
         return ResponseEntity.ok(userService.sendRecoveryMail(requestPasswordRecoveryRequest));
-    }
-
-    @PostMapping("/recover")
-    public ResponseEntity<String> recover(@RequestBody PasswordRecoveryRequest passwordRecoveryRequest) throws ExceptionWithHttpStatusCode{
-        return ResponseEntity.ok(authenticationService.recoverPassword(passwordRecoveryRequest));
     }
 
     @PostMapping

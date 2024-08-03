@@ -2,6 +2,7 @@ package com.gear2go.controller;
 
 import com.gear2go.domain.dto.request.AuthenticationRequest;
 import com.gear2go.domain.dto.request.RegisterRequest;
+import com.gear2go.domain.dto.request.user.PasswordRecoveryRequest;
 import com.gear2go.domain.dto.response.AuthenticationResponse;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
 import com.gear2go.service.AuthenticationService;
@@ -29,6 +30,11 @@ public class AuthenticationController {
     @PostMapping("/authenticate/guest")
     public ResponseEntity<AuthenticationResponse> register() {
         return ResponseEntity.ok(authenticationService.authenticateGuest());
+    }
+
+    @PostMapping("/recover-password")
+    public ResponseEntity<String> recover(@RequestBody PasswordRecoveryRequest passwordRecoveryRequest) throws ExceptionWithHttpStatusCode{
+        return ResponseEntity.ok(authenticationService.recoverPassword(passwordRecoveryRequest));
     }
 
 }
