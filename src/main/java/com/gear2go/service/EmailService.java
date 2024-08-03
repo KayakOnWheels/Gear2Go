@@ -32,9 +32,9 @@ public class EmailService {
 
     private SimpleMailMessage createMailMessage(final Mail mail) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(mail.getMailTo());
-        mailMessage.setSubject(mail.getSubject());
-        mailMessage.setText(mail.getMessage());
+        mailMessage.setTo(mail.mailTo());
+        mailMessage.setSubject(mail.subject());
+        mailMessage.setText(mail.message());
         return mailMessage;
     }
 }
