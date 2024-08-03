@@ -1,8 +1,9 @@
 package com.gear2go.controller;
 
-import com.gear2go.dto.request.product.CreateProductRequest;
-import com.gear2go.dto.request.product.UpdateProductRequest;
-import com.gear2go.dto.response.ProductResponse;
+import com.gear2go.domain.dto.request.product.CreateProductRequest;
+import com.gear2go.domain.dto.request.product.ProductAvailabilityInDateRangeRequest;
+import com.gear2go.domain.dto.request.product.UpdateProductRequest;
+import com.gear2go.domain.dto.response.ProductResponse;
 import com.gear2go.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,18 +27,22 @@ public class ProductController {
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProduct(id));
     }
+    @PostMapping("/availability")
+    public ResponseEntity<Integer> getProductAvailability(@RequestBody ProductAvailabilityInDateRangeRequest productAvailabilityInDateRangeRequest) {
+        return ResponseEntity.ok(productService.checkProductAvailabilityInDateRange(productAvailabilityInDateRangeRequest));
+    }
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<ProductResponse> createProduct(@RequestBody CreateProductRequest createProductRequest) {
         return ResponseEntity.ok(productService.createProduct(createProductRequest));
     }
 
-    @PutMapping
+    @PutMapping("/admin")
     public ResponseEntity<ProductResponse> updateProduct(@RequestBody UpdateProductRequest updateProductRequest) {
         return ResponseEntity.ok(productService.updateProduct(updateProductRequest));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
