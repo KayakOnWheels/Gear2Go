@@ -8,12 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Repository
 @Transactional
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query
-    Integer findNumberOfProductsRentedInDataRange(@Param("ID") Long id, @Param("RENT_DATE") LocalDate rentDate, @Param("RETURN_DATE") LocalDate returnDate);
+    Optional<Integer> findNumberOfProductsRentedInDataRange(@Param("ID") Long id, @Param("RENT_DATE") LocalDate rentDate, @Param("RETURN_DATE") LocalDate returnDate);
 
 }
