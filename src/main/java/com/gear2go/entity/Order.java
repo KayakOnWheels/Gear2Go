@@ -24,18 +24,30 @@ public class Order {
     @Column(name = "status")
     private OrderStatus orderStatus;
 
+
+    @ManyToOne
+    @JoinColumn(name = "shipping_address_id", nullable = false)
+    private Address shippingAddress;
+
+    @ManyToOne
+    @JoinColumn(name = "billing_address_id", nullable = false)
+    private Address billingAddress;
+
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    public Order(LocalDate orderDate, OrderStatus orderStatus, User user, Cart cart) {
+    public Order(LocalDate orderDate, OrderStatus orderStatus, User user, Cart cart, Address billingAddress, Address shippingAddress) {
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
         this.user = user;
         this.cart = cart;
+        this.billingAddress = billingAddress;
+        this.shippingAddress = shippingAddress;
     }
 }

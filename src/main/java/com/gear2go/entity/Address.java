@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -36,6 +39,11 @@ public class Address {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "shippingAddress", fetch = FetchType.LAZY)
+    private List<Order> shippingOrders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "billingAddress", fetch = FetchType.LAZY)
+    private List<Order> billingOrders = new ArrayList<>();
 
     public Address(String street, String buildingNumber, String apartmentNumber, String postalCode, String city, User user) {
         this.street = street;
