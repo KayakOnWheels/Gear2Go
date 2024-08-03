@@ -2,6 +2,7 @@ package com.gear2go.config;
 
 import com.gear2go.entity.enums.Role;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -40,16 +41,27 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("v1/auth/**").permitAll()  // specify endpoints here
-                        .requestMatchers("v1/weather/**").permitAll()  // specify endpoints here
-                        .requestMatchers("v1/auth/authenticate/guest").permitAll()
-                        .requestMatchers("v1/product/**").permitAll()
-                        .requestMatchers("v1/user/**").permitAll()
-                        .requestMatchers("v1/product/availability").permitAll()
-                        .requestMatchers("v1/product/crud").hasRole(String.valueOf(Role.ADMIN))
-                        .requestMatchers("v1/cart/**").permitAll()
-                        .requestMatchers("v1/*/admin/**").hasRole(String.valueOf(Role.ADMIN))
-                        .requestMatchers("v1/*/admin").hasRole(String.valueOf(Role.ADMIN))
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                        .requestMatchers(   //role = ADMIN
+                                "v1/*/admin/**",
+                                "v1/*/admin",
+                                "v1/product/crud",
+                                "v1/*/admin/**"
+                        ).hasRole(String.valueOf(Role.ADMIN))
+
+                        .requestMatchers(   //permitAll
+                                "v1/auth/**",
+                                "v1/weather/**",
+                                "v1/auth/authenticate/guest",
+                                "v1/product/**",
+                                "v1/user/**",
+                                "v1/product/availability",
+                                "v1/cart/**",
+                                "actuator/mappings"
+                        ).permitAll()
+
+                        .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()   //actuator endpoints
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
