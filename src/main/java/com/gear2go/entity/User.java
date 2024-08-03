@@ -10,9 +10,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 @Data
 @Entity
@@ -43,21 +42,25 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToOne
+    @Column(name = "expiration_date")
+    private Date expirationDate;
+
+    @OneToOne(cascade = CascadeType.ALL,
+    orphanRemoval = true)
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
     @OneToMany(targetEntity = Order.class,
             mappedBy = "user",
             orphanRemoval = true,
-            fetch = FetchType.EAGER)
+            fetch = FetchType.LAZY)
     private List<Order> orderList = new ArrayList<>();
 
 
     @OneToMany(targetEntity = Address.class,
             mappedBy = "user",
             fetch = FetchType.LAZY)
-    private List<Address> addressList;
+    private List<Address> addressList = new ArrayList<>();
 
     public User(String firstName, String lastName, String mail, String password, Role role) {
         this.firstName = firstName;
@@ -71,6 +74,29 @@ public class User implements UserDetails {
         this.mail = mail;
         this.password = password;
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", mail='" + mail + '\'' +
+                ", role=" + role +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override

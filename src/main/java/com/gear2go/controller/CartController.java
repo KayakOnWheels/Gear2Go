@@ -1,9 +1,10 @@
 package com.gear2go.controller;
 
-import com.gear2go.dto.request.cart.AddProductToCartRequest;
-import com.gear2go.dto.request.cart.CreateCartRequest;
-import com.gear2go.dto.request.cart.UpdateCartRentDatesRequest;
-import com.gear2go.dto.response.CartResponse;
+import com.gear2go.domain.dto.request.MailRequest;
+import com.gear2go.domain.dto.request.cart.AddProductToCartRequest;
+import com.gear2go.domain.dto.request.cart.UpdateCartRentDatesRequest;
+import com.gear2go.domain.dto.response.CartResponse;
+import com.gear2go.exception.ExceptionWithHttpStatusCode;
 import com.gear2go.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,35 +19,37 @@ public class CartController {
 
     private final CartService cartService;
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<CartResponse>> getAllCarts() {
         return ResponseEntity.ok(cartService.getAllCarts());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CartResponse> getCartById(@PathVariable Long id) {
-        return ResponseEntity.ok(cartService.getCart(id));
+
+    @GetMapping("/admin")
+    public ResponseEntity<CartResponse> getCartByUserMail(@RequestBody MailRequest mailRequest) throws ExceptionWithHttpStatusCode {
+        return ResponseEntity.ok(cartService.getUserCart(mailRequest));
     }
 
-    @PostMapping
-    public ResponseEntity<CartResponse> createCart(@RequestBody CreateCartRequest createCartRequest) {
-        return ResponseEntity.ok(cartService.createEmptyCart(createCartRequest));
+    @GetMapping
+    public ResponseEntity<CartResponse> getCart() throws ExceptionWithHttpStatusCode {
+        return ResponseEntity.ok(cartService.getUserCart(null));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CartResponse> updateCartRentDates(@PathVariable Long id, @RequestBody UpdateCartRentDatesRequest updateCartRentDatesRequest) {
-        return ResponseEntity.ok(cartService.updateCartRentDates(id, updateCartRentDatesRequest));
+
+    @PutMapping("/dates")
+    public ResponseEntity<CartResponse> updateCartRentDates(@RequestBody UpdateCartRentDatesRequest updateCartRentDatesRequest) throws ExceptionWithHttpStatusCode {
+        return ResponseEntity.ok(cartService.updateCartRentDates(updateCartRentDatesRequest));
     }
+
+    @PutMapping("/admin/dates")
+    public ResponseEntity<CartResponse> updateCartRentDatesAdmin(@RequestBody UpdateCartRentDatesRequest updateCartRentDatesRequest) throws ExceptionWithHttpStatusCode {
+        return ResponseEntity.ok(cartService.updateCartRentDates(updateCartRentDatesRequest));
+    }
+
 
     @PutMapping
-    public ResponseEntity<CartResponse> addProductToCart(@RequestBody AddProductToCartRequest addProductToCartRequest) throws Exception{
-        return ResponseEntity.ok(cartService.addProductToCart(addProductToCartRequest));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCart(@PathVariable Long id) {
-        cartService.deleteCart(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CartResponse> addOrSubtractProductToCart(@RequestBody AddProductToCartRequest addProductToCartRequest) throws ExceptionWithHttpStatusCode {
+        return ResponseEntity.ok(cartService.addOrSubtractProductToCart(addProductToCartRequest));
     }
 
 }

@@ -1,10 +1,12 @@
 package com.gear2go.controller;
 
-import com.gear2go.dto.request.user.CreateUserRequest;
-import com.gear2go.dto.request.user.UpdateUserRequest;
-import com.gear2go.dto.request.user.UserCredentialsRequest;
-import com.gear2go.dto.response.LoginValidationStatusResponse;
-import com.gear2go.dto.response.UserResponse;
+import com.gear2go.domain.dto.request.RequestPasswordRecoveryRequest;
+import com.gear2go.domain.dto.request.user.CreateUserRequest;
+import com.gear2go.domain.dto.request.user.PasswordRecoveryRequest;
+import com.gear2go.domain.dto.request.user.UpdateUserRequest;
+import com.gear2go.domain.dto.response.UserResponse;
+import com.gear2go.exception.ExceptionWithHttpStatusCode;
+import com.gear2go.service.AuthenticationService;
 import com.gear2go.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers() {
@@ -25,8 +28,18 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) throws ExceptionWithHttpStatusCode{
         return ResponseEntity.ok(userService.getUser(id));
+    }
+
+    @PostMapping("/request-recovery")
+    public ResponseEntity<String> sendRecoveryMail(@RequestBody RequestPasswordRecoveryRequest requestPasswordRecoveryRequest) throws ExceptionWithHttpStatusCode{
+        return ResponseEntity.ok(userService.sendRecoveryMail(requestPasswordRecoveryRequest));
+    }
+
+    @PostMapping("/recover")
+    public ResponseEntity<String> recover(@RequestBody PasswordRecoveryRequest passwordRecoveryRequest) throws ExceptionWithHttpStatusCode{
+        return ResponseEntity.ok(authenticationService.recoverPassword(passwordRecoveryRequest));
     }
 
     @PostMapping
@@ -35,14 +48,21 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest) throws ExceptionWithHttpStatusCode {
         return ResponseEntity.ok(userService.updateUser(updateUserRequest));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUser() {
+        userService.deleteUser(null);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/admin/{id}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
-    
+
 }

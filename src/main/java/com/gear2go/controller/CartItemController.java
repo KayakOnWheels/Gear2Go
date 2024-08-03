@@ -1,8 +1,8 @@
 package com.gear2go.controller;
 
-import com.gear2go.dto.request.cartitem.CreateCartItemRequest;
-import com.gear2go.dto.request.cartitem.UpdateCartItemRequest;
-import com.gear2go.dto.response.CartItemResponse;
+import com.gear2go.domain.dto.request.cartitem.CreateCartItemRequest;
+import com.gear2go.domain.dto.request.cartitem.UpdateCartItemRequest;
+import com.gear2go.domain.dto.response.CartItemResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

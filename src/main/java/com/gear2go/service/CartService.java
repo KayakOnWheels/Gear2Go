@@ -1,25 +1,30 @@
 package com.gear2go.service;
 
-import com.gear2go.dto.request.cart.AddProductToCartRequest;
-import com.gear2go.dto.request.cart.CreateCartRequest;
-import com.gear2go.dto.request.cart.UpdateCartRentDatesRequest;
-import com.gear2go.dto.response.CartResponse;
+import com.gear2go.domain.dto.request.MailRequest;
+import com.gear2go.domain.dto.request.cart.AddProductToCartRequest;
+import com.gear2go.domain.dto.request.cart.UpdateCartRentDatesRequest;
+import com.gear2go.domain.dto.response.CartResponse;
 import com.gear2go.entity.Cart;
 import com.gear2go.entity.CartItem;
 import com.gear2go.entity.Product;
 import com.gear2go.entity.User;
-import com.gear2go.entity.enums.Role;
-import com.gear2go.exception.AddressNotFoundException;
+import com.gear2go.exception.ExceptionWithHttpStatusCode;
+import com.gear2go.exception.ProductNotAvailable;
+import com.gear2go.exception.UserNotFoundException;
 import com.gear2go.mapper.CartMapper;
 import com.gear2go.repository.CartItemRepository;
 import com.gear2go.repository.CartRepository;
 import com.gear2go.repository.ProductRepository;
 import com.gear2go.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -38,66 +43,83 @@ public class CartService {
         return cartMapper.toCartResponseList(cartRepository.findAll());
     }
 
-    public CartResponse getCart(Long id) {
-        return cartMapper.toCartResponse(cartRepository.findById(id).orElseThrow());
-    }
+    public CartResponse getUserCart(@Nullable MailRequest mailRequest) throws ExceptionWithHttpStatusCode {
+        User cartOwner;
+        Cart cart;
 
-    public CartResponse createEmptyCart(CreateCartRequest createCartRequest) {
-        Cart cart = new Cart(
-                userRepository.findById(createCartRequest.userId()).orElseThrow(),
-                createCartRequest.rentDate(),
-                createCartRequest.returnDate()
-        );
+        cartOwner = (mailRequest == null) ? getCartOwner(null) : getCartOwner(mailRequest.mail());
 
-        cartRepository.save(cart);
+        cart = cartOwner.getCart();
+
         return cartMapper.toCartResponse(cart);
     }
 
-    public CartResponse updateCartRentDates(Long id, UpdateCartRentDatesRequest updateCartRentDatesRequest) {
-        Cart cart = cartRepository.findById(id).orElseThrow();
+    public CartResponse updateCartRentDates(UpdateCartRentDatesRequest updateCartRentDatesRequest) throws ExceptionWithHttpStatusCode {
+
+        User cartOwner = getCartOwner(updateCartRentDatesRequest.mail());
+        Cart cart = cartOwner.getCart();
 
         cart.setRentDate(updateCartRentDatesRequest.rentDate());
         cart.setReturnDate(updateCartRentDatesRequest.returnDate());
 
+        updateTotalProductPrice(cart);
         cartRepository.save(cart);
         return cartMapper.toCartResponse(cart);
     }
 
 
-    public void deleteCart(Long id) {
-        Cart cart = cartRepository.findById(id).orElseThrow();
-        cartRepository.delete(cart);
-    }
-
-    public CartResponse addProductToCart(AddProductToCartRequest addProductToCartRequest) throws AddressNotFoundException {
-        Authentication authentication = authenticationService.getAuthentication();
+    public CartResponse addOrSubtractProductToCart(AddProductToCartRequest addProductToCartRequest) throws ExceptionWithHttpStatusCode {
         User cartOwner;
         Cart cart;
 
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+        cartOwner = getCartOwner(addProductToCartRequest.userMail());
+        Product product = productRepository.findById(addProductToCartRequest.productId()).orElseThrow();
 
-            User currentUser = userRepository.findUserByMail(authentication.getName()).orElseThrow();
-            Product product = productRepository.findById(addProductToCartRequest.productId()).orElseThrow();
+        if (cartOwner.getCart() == null) {
+            cartOwner.setCart(new Cart(cartOwner, LocalDate.now(), LocalDate.now().plusDays(1)));
+        }
+        cart = cartOwner.getCart();
 
-            if (addProductToCartRequest.userMail().isEmpty()) {
-                cartOwner = userRepository.findUserByMail(currentUser.getMail()).orElseThrow();
-            } else if (currentUser.getRole().equals(Role.ADMIN)) {
-                cartOwner = userRepository.findUserByMail(addProductToCartRequest.userMail()).orElseThrow();
-            } else {
-                throw new AddressNotFoundException(123L); //zmienic
-            }
-            cart = cartOwner.getCart();
-
-            if (productService.checkProductAvailabilityInDateRange(addProductToCartRequest.productId(), cart.getRentDate(), cart.getReturnDate()) <= 0) {
-                throw new RuntimeException();
-            }
-
-            CartItem cartItem = new CartItem(addProductToCartRequest.quantity(), product.getPrice(), product.getWeight(), product, cart);
-            cartItemRepository.save(cartItem);
-            return cartMapper.toCartResponse(cart);
+        if (productService.checkProductAvailabilityInDateRange(addProductToCartRequest.productId(), cart.getRentDate(), cart.getReturnDate()) <= 0) {
+            throw new ProductNotAvailable();
         }
 
-        throw new AddressNotFoundException(123L); //zmienic
+        CartItem cartItem = cart.getCartItemList().stream()
+                .filter(item -> item.getProduct().getId().equals(product.getId())).findFirst().
+                orElse(new CartItem(0, BigDecimal.ZERO, product, cart));
+
+
+        if (cartItem.getId() == null) {
+            cart.getCartItemList().add(cartItem);
+        }
+
+        cartItem.setQuantity(cartItem.getQuantity() + addProductToCartRequest.quantity());
+        cartItem.setPrice(cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+
+        cartItemRepository.save(cartItem);
+
+        updateTotalProductPrice(cart);
+        return cartMapper.toCartResponse(cart);
     }
 
+
+    public void updateTotalProductPrice(Cart cart) {
+        BigDecimal totalPrice = new BigDecimal(BigInteger.ZERO);
+        for (CartItem cartItem : cart.getCartItemList()) {
+            totalPrice = totalPrice.add(cartItem.getPrice());
+        }
+        long period = ChronoUnit.DAYS.between(cart.getRentDate(), cart.getReturnDate());
+        totalPrice = totalPrice.multiply(BigDecimal.valueOf(period));
+
+        cart.setTotalProductPrice(totalPrice);
+        cartRepository.save(cart);
+    }
+
+    private User getCartOwner(@Nullable String mail) throws ExceptionWithHttpStatusCode {
+        Authentication authentication = authenticationService.getAuthentication();
+        User currentUser = userRepository.findUserByMail(authentication.getName()).orElseThrow(UserNotFoundException::new);
+
+        String email = (mail == null) ? currentUser.getMail() : mail;
+        return userRepository.findUserByMail(email).orElseThrow(UserNotFoundException::new);
+    }
 }

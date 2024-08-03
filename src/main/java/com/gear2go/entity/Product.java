@@ -22,7 +22,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @Column(name = "weight", nullable = false)
@@ -36,7 +36,9 @@ public class Product {
 
     @OneToMany(targetEntity = CartItem.class,
             mappedBy = "product",
-            fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
     private List<CartItem> cartItemList;
 
     public Product(String name, float weight, BigDecimal price, Integer stock) {
@@ -52,5 +54,16 @@ public class Product {
         this.weight = weight;
         this.price = price;
         this.stock = stock;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", weight=" + weight +
+                ", price=" + price +
+                ", stock=" + stock +
+                '}';
     }
 }

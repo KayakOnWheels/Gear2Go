@@ -23,21 +23,17 @@ public class CartItem {
     @Column(name = "price", nullable = false)
     private BigDecimal price = BigDecimal.ZERO;
 
-    @Column(name = "weight", nullable = false)
-    private Float weight;
-
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    public CartItem(Integer quantity, BigDecimal price, Float weight, Product product, Cart cart) {
+    public CartItem(Integer quantity, BigDecimal price, Product product, Cart cart) {
         this.quantity = quantity;
         this.price = price;
-        this.weight = weight;
         this.product = product;
         this.cart = cart;
     }
