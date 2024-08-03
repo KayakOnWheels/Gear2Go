@@ -1,4 +1,4 @@
-package com.gear2go.dto.request.cartitem;
+package com.gear2go.domain.dto.request.cartitem;
 
 import java.math.BigDecimal;
 

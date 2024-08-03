@@ -1,4 +1,4 @@
-package com.gear2go.dto.response;
+package com.gear2go.domain.dto.response;
 
 import java.math.BigDecimal;
 

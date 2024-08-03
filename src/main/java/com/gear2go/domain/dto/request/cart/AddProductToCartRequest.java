@@ -1,4 +1,4 @@
-package com.gear2go.dto.request.cart;
+package com.gear2go.domain.dto.request.cart;
 
 import org.springframework.lang.Nullable;
 
