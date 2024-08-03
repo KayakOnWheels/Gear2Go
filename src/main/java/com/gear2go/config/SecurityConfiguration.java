@@ -1,5 +1,6 @@
 package com.gear2go.config;
 
+import com.gear2go.entity.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +41,15 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("v1/auth/**").permitAll()  // specify endpoints here
-                        .requestMatchers("v1/product").permitAll()  // specify endpoints here
+                        .requestMatchers("v1/weather/**").permitAll()  // specify endpoints here
+                        .requestMatchers("v1/auth/authenticate/guest").permitAll()
+                        .requestMatchers("v1/product/**").permitAll()
+                        .requestMatchers("v1/user/**").permitAll()
+                        .requestMatchers("v1/product/availability").permitAll()
+                        .requestMatchers("v1/product/crud").hasRole(String.valueOf(Role.ADMIN))
+                        .requestMatchers("v1/cart/**").permitAll()
+                        .requestMatchers("v1/*/admin/**").hasRole(String.valueOf(Role.ADMIN))
+                        .requestMatchers("v1/*/admin").hasRole(String.valueOf(Role.ADMIN))
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
