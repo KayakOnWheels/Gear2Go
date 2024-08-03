@@ -1,8 +1,8 @@
 package com.gear2go.controller;
 
-import com.gear2go.domain.dto.request.order.CreateOrderRequest;
-import com.gear2go.domain.dto.request.order.UpdateOrderStatusRequest;
-import com.gear2go.domain.dto.response.OrderResponse;
+import com.gear2go.dto.request.order.CreateOrderRequest;
+import com.gear2go.dto.request.order.UpdateOrderStatusRequest;
+import com.gear2go.dto.response.OrderResponse;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
 import com.gear2go.service.OrderService;
 import org.springframework.http.ResponseEntity;

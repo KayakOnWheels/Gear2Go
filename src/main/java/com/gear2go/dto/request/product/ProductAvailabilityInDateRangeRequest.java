@@ -1,4 +1,4 @@
-package com.gear2go.domain.dto.request.product;
+package com.gear2go.dto.request.product;
 
 import java.time.LocalDate;
 

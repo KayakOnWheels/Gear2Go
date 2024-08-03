@@ -1,8 +1,8 @@
 package com.gear2go.service;
 
-import com.gear2go.domain.dto.request.order.CreateOrderRequest;
-import com.gear2go.domain.dto.request.order.UpdateOrderStatusRequest;
-import com.gear2go.domain.dto.response.OrderResponse;
+import com.gear2go.dto.request.order.CreateOrderRequest;
+import com.gear2go.dto.request.order.UpdateOrderStatusRequest;
+import com.gear2go.dto.response.OrderResponse;
 import com.gear2go.entity.Cart;
 import com.gear2go.entity.Order;
 import com.gear2go.entity.User;
@@ -13,7 +13,6 @@ import com.gear2go.exception.UserNotFoundException;
 import com.gear2go.mapper.OrderMapper;
 import com.gear2go.mapper.OrderStatusMapper;
 import com.gear2go.repository.AddressRepository;
-import com.gear2go.repository.CartRepository;
 import com.gear2go.repository.OrderRepository;
 import com.gear2go.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

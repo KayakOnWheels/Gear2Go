@@ -1,6 +1,6 @@
 package com.gear2go.mapper;
 
-import com.gear2go.domain.dto.response.UserResponse;
+import com.gear2go.dto.response.UserResponse;
 import com.gear2go.entity.User;
 import org.springframework.stereotype.Service;
 

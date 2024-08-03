@@ -1,4 +1,4 @@
-package com.gear2go.domain.dto.response;
+package com.gear2go.dto.response;
 
 import java.time.LocalDate;
 import java.util.List;

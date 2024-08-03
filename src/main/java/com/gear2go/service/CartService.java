@@ -1,9 +1,9 @@
 package com.gear2go.service;
 
-import com.gear2go.domain.dto.request.MailRequest;
-import com.gear2go.domain.dto.request.cart.AddProductToCartRequest;
-import com.gear2go.domain.dto.request.cart.UpdateCartRentDatesRequest;
-import com.gear2go.domain.dto.response.CartResponse;
+import com.gear2go.dto.request.MailRequest;
+import com.gear2go.dto.request.cart.AddProductToCartRequest;
+import com.gear2go.dto.request.cart.UpdateCartRentDatesRequest;
+import com.gear2go.dto.response.CartResponse;
 import com.gear2go.entity.Cart;
 import com.gear2go.entity.CartItem;
 import com.gear2go.entity.Product;

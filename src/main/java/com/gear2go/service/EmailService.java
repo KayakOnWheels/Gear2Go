@@ -1,7 +1,7 @@
 package com.gear2go.service;
 
 
-import com.gear2go.domain.dto.Mail;
+import com.gear2go.domain.Mail;
 import com.gear2go.exception.FailedToSendEmailException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

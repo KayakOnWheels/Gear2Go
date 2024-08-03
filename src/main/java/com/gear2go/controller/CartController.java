@@ -1,9 +1,9 @@
 package com.gear2go.controller;
 
-import com.gear2go.domain.dto.request.MailRequest;
-import com.gear2go.domain.dto.request.cart.AddProductToCartRequest;
-import com.gear2go.domain.dto.request.cart.UpdateCartRentDatesRequest;
-import com.gear2go.domain.dto.response.CartResponse;
+import com.gear2go.dto.request.MailRequest;
+import com.gear2go.dto.request.cart.AddProductToCartRequest;
+import com.gear2go.dto.request.cart.UpdateCartRentDatesRequest;
+import com.gear2go.dto.response.CartResponse;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
 import com.gear2go.service.CartService;
 import lombok.RequiredArgsConstructor;

@@ -1,10 +1,10 @@
 package com.gear2go.service;
 
-import com.gear2go.domain.dto.Mail;
-import com.gear2go.domain.dto.request.RequestPasswordRecoveryRequest;
-import com.gear2go.domain.dto.request.user.CreateUserRequest;
-import com.gear2go.domain.dto.request.user.UpdateUserRequest;
-import com.gear2go.domain.dto.response.UserResponse;
+import com.gear2go.domain.Mail;
+import com.gear2go.dto.request.RequestPasswordRecoveryRequest;
+import com.gear2go.dto.request.user.CreateUserRequest;
+import com.gear2go.dto.request.user.UpdateUserRequest;
+import com.gear2go.dto.response.UserResponse;
 import com.gear2go.entity.User;
 import com.gear2go.entity.enums.Role;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;

@@ -1,9 +1,9 @@
 package com.gear2go.service;
 
-import com.gear2go.domain.dto.request.product.CreateProductRequest;
-import com.gear2go.domain.dto.request.product.ProductAvailabilityInDateRangeRequest;
-import com.gear2go.domain.dto.request.product.UpdateProductRequest;
-import com.gear2go.domain.dto.response.ProductResponse;
+import com.gear2go.dto.request.product.CreateProductRequest;
+import com.gear2go.dto.request.product.ProductAvailabilityInDateRangeRequest;
+import com.gear2go.dto.request.product.UpdateProductRequest;
+import com.gear2go.dto.response.ProductResponse;
 import com.gear2go.entity.Product;
 import com.gear2go.mapper.ProductMapper;
 import com.gear2go.repository.ProductRepository;

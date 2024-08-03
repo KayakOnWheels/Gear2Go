@@ -1,12 +1,10 @@
 package com.gear2go.controller;
 
-import com.gear2go.domain.dto.request.RequestPasswordRecoveryRequest;
-import com.gear2go.domain.dto.request.user.CreateUserRequest;
-import com.gear2go.domain.dto.request.user.PasswordRecoveryRequest;
-import com.gear2go.domain.dto.request.user.UpdateUserRequest;
-import com.gear2go.domain.dto.response.UserResponse;
+import com.gear2go.dto.request.RequestPasswordRecoveryRequest;
+import com.gear2go.dto.request.user.CreateUserRequest;
+import com.gear2go.dto.request.user.UpdateUserRequest;
+import com.gear2go.dto.response.UserResponse;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
-import com.gear2go.service.AuthenticationService;
 import com.gear2go.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

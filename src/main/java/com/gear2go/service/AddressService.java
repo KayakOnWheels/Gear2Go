@@ -1,8 +1,8 @@
 package com.gear2go.service;
 
-import com.gear2go.domain.dto.request.address.CreateAddressRequest;
-import com.gear2go.domain.dto.request.address.UpdateAddressRequest;
-import com.gear2go.domain.dto.response.AddressResponse;
+import com.gear2go.dto.request.address.CreateAddressRequest;
+import com.gear2go.dto.request.address.UpdateAddressRequest;
+import com.gear2go.dto.response.AddressResponse;
 import com.gear2go.entity.Address;
 import com.gear2go.exception.AddressNotFoundException;
 import com.gear2go.mapper.AddressMapper;

@@ -1,4 +1,4 @@
-package com.gear2go.domain.dto.response;
+package com.gear2go.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
