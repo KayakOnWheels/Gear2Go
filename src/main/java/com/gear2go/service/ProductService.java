@@ -1,8 +1,9 @@
 package com.gear2go.service;
 
-import com.gear2go.dto.request.product.CreateProductRequest;
-import com.gear2go.dto.request.product.UpdateProductRequest;
-import com.gear2go.dto.response.ProductResponse;
+import com.gear2go.domain.dto.request.product.CreateProductRequest;
+import com.gear2go.domain.dto.request.product.ProductAvailabilityInDateRangeRequest;
+import com.gear2go.domain.dto.request.product.UpdateProductRequest;
+import com.gear2go.domain.dto.response.ProductResponse;
 import com.gear2go.entity.Product;
 import com.gear2go.mapper.ProductMapper;
 import com.gear2go.repository.ProductRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -56,11 +58,27 @@ public class ProductService {
         productRepository.delete(product);
     }
 
+
     public Integer checkProductAvailabilityInDateRange(Long id, LocalDate rentDate, LocalDate returnDate) {
         Product product = productRepository.findById(id).orElseThrow();
 
-        Integer rentedInDataRange = productRepository.findNumberOfProductsRentedInDataRange(id, rentDate, returnDate);
+        Optional<Integer> rentedInDataRange = productRepository.findNumberOfProductsRentedInDataRange(id, rentDate, returnDate);
 
-        return product.getStock() - rentedInDataRange;
+        if(rentedInDataRange.isEmpty()) {
+            rentedInDataRange = Optional.of(0);
+        }
+        return product.getStock() - rentedInDataRange.get();
+    }
+
+    public Integer checkProductAvailabilityInDateRange(ProductAvailabilityInDateRangeRequest productAvailabilityInDateRangeRequest) {
+        Product product = productRepository.findById(productAvailabilityInDateRangeRequest.productId()).orElseThrow();
+
+        Optional<Integer> rentedInDataRange = productRepository.findNumberOfProductsRentedInDataRange(
+                product.getId(), productAvailabilityInDateRangeRequest.rentDate(), productAvailabilityInDateRangeRequest.returnDate());
+
+        if(rentedInDataRange.isEmpty()) {
+            rentedInDataRange = Optional.of(0);
+        }
+        return product.getStock() - rentedInDataRange.get();
     }
 }
