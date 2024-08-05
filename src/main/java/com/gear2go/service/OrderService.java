@@ -9,6 +9,7 @@ import com.gear2go.entity.User;
 import com.gear2go.entity.enums.OrderStatus;
 import com.gear2go.exception.AddressNotFoundException;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
+import com.gear2go.exception.OrderNotFoundException;
 import com.gear2go.exception.UserNotFoundException;
 import com.gear2go.mapper.OrderMapper;
 import com.gear2go.mapper.OrderStatusMapper;
@@ -37,20 +38,12 @@ public class OrderService {
         return orderMapper.toOrderResponseList(orderRepository.findAll());
     }
 
-    public OrderResponse getOrder(Long id) {
-        return orderMapper.toOrderResponse(orderRepository.findById(id).orElseThrow());
+    public OrderResponse getOrder(Long id) throws ExceptionWithHttpStatusCode{
+        return orderMapper.toOrderResponse(orderRepository.findById(id).orElseThrow(OrderNotFoundException::new));
     }
 
-    public OrderResponse updateOrderStatus(UpdateOrderStatusRequest updateOrderStatusRequest) throws Exception {
-        Order order = orderRepository.findById(updateOrderStatusRequest.id()).orElseThrow();
-
-        order.setOrderStatus(orderStatusMapper.toOrderStatus(updateOrderStatusRequest));
-        orderRepository.save(order);
-        return orderMapper.toOrderResponse(order);
-    }
-
-    public void deleteOrder(Long id) {
-        Order order = orderRepository.findById(id).orElseThrow();
+    public void deleteOrder(Long id) throws ExceptionWithHttpStatusCode{
+        Order order = orderRepository.findById(id).orElseThrow(OrderNotFoundException::new);
         orderRepository.delete(order);
     }
 

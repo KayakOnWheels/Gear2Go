@@ -5,6 +5,8 @@ import com.gear2go.dto.request.product.ProductAvailabilityInDateRangeRequest;
 import com.gear2go.dto.request.product.UpdateProductRequest;
 import com.gear2go.dto.response.ProductResponse;
 import com.gear2go.entity.Product;
+import com.gear2go.exception.ExceptionWithHttpStatusCode;
+import com.gear2go.exception.ProductNotFoundException;
 import com.gear2go.mapper.ProductMapper;
 import com.gear2go.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +27,8 @@ public class ProductService {
         return productMapper.toProductResponseList(productRepository.findAll());
     }
 
-    public ProductResponse getProduct(Long id) {
-        return productMapper.toProductResponse(productRepository.findById(id).orElseThrow());
+    public ProductResponse getProduct(Long id) throws ExceptionWithHttpStatusCode {
+        return productMapper.toProductResponse(productRepository.findById(id).orElseThrow(ProductNotFoundException::new));
     }
 
     public ProductResponse createProduct(CreateProductRequest createProductRequest) {
@@ -41,8 +43,8 @@ public class ProductService {
         return productMapper.toProductResponse(product);
     }
 
-    public ProductResponse updateProduct(UpdateProductRequest updateProductRequest) {
-        Product product = productRepository.findById(updateProductRequest.id()).orElseThrow();
+    public ProductResponse updateProduct(UpdateProductRequest updateProductRequest) throws ExceptionWithHttpStatusCode {
+        Product product = productRepository.findById(updateProductRequest.id()).orElseThrow(ProductNotFoundException::new);
 
         product.setName(updateProductRequest.name());
         product.setWeight(updateProductRequest.weight());
@@ -53,14 +55,14 @@ public class ProductService {
         return productMapper.toProductResponse(product);
     }
 
-    public void deleteProduct(Long id) {
-        Product product = productRepository.findById(id).orElseThrow();
+    public void deleteProduct(Long id) throws ExceptionWithHttpStatusCode{
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
         productRepository.delete(product);
     }
 
 
-    public Integer checkProductAvailabilityInDateRange(Long id, LocalDate rentDate, LocalDate returnDate) {
-        Product product = productRepository.findById(id).orElseThrow();
+    public Integer checkProductAvailabilityInDateRange(Long id, LocalDate rentDate, LocalDate returnDate) throws ExceptionWithHttpStatusCode {
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         Optional<Integer> rentedInDataRange = productRepository.findNumberOfProductsRentedInDataRange(id, rentDate, returnDate);
 
@@ -70,8 +72,8 @@ public class ProductService {
         return product.getStock() - rentedInDataRange.get();
     }
 
-    public Integer checkProductAvailabilityInDateRange(ProductAvailabilityInDateRangeRequest productAvailabilityInDateRangeRequest) {
-        Product product = productRepository.findById(productAvailabilityInDateRangeRequest.productId()).orElseThrow();
+    public Integer checkProductAvailabilityInDateRange(ProductAvailabilityInDateRangeRequest productAvailabilityInDateRangeRequest) throws ExceptionWithHttpStatusCode{
+        Product product = productRepository.findById(productAvailabilityInDateRangeRequest.productId()).orElseThrow(ProductNotFoundException::new);
 
         Optional<Integer> rentedInDataRange = productRepository.findNumberOfProductsRentedInDataRange(
                 product.getId(), productAvailabilityInDateRangeRequest.rentDate(), productAvailabilityInDateRangeRequest.returnDate());

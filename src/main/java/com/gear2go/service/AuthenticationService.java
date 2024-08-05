@@ -19,6 +19,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService implements AuthenticationFacade {
@@ -91,5 +93,9 @@ public class AuthenticationService implements AuthenticationFacade {
     @Override
     public Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    public Optional<User> getAuthenticatedUser() throws UserNotFoundException{
+        return Optional.ofNullable(userRepository.findUserByMail(getAuthentication().getName()).orElseThrow(UserNotFoundException::new));
     }
 }
