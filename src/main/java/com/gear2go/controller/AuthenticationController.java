@@ -22,15 +22,18 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 
+
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) throws ExceptionWithHttpStatusCode {
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
 
+
     @PostMapping("/authenticate-guest")
     public ResponseEntity<AuthenticationResponse> registerGuest() {
         return ResponseEntity.ok(authenticationService.authenticateGuest());
     }
+
 
     @PostMapping("/recover-password")
     public ResponseEntity<String> recover(@RequestBody PasswordRecoveryRequest passwordRecoveryRequest) throws ExceptionWithHttpStatusCode{

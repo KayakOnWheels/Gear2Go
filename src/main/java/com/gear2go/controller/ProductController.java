@@ -24,25 +24,30 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) throws ExceptionWithHttpStatusCode {
         return ResponseEntity.ok(productService.getProduct(id));
     }
+
 
     @PostMapping("/availability")
     public ResponseEntity<Integer> getProductAvailability(@RequestBody ProductAvailabilityInDateRangeRequest productAvailabilityInDateRangeRequest) throws ExceptionWithHttpStatusCode{
         return ResponseEntity.ok(productService.checkProductAvailabilityInDateRange(productAvailabilityInDateRangeRequest));
     }
 
+
     @PostMapping("/add")
     public ResponseEntity<ProductResponse> createProduct(@RequestBody CreateProductRequest createProductRequest) {
         return ResponseEntity.ok(productService.createProduct(createProductRequest));
     }
 
+
     @PutMapping("/update")
     public ResponseEntity<ProductResponse> updateProduct(@RequestBody UpdateProductRequest updateProductRequest) throws ExceptionWithHttpStatusCode{
         return ResponseEntity.ok(productService.updateProduct(updateProductRequest));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) throws ExceptionWithHttpStatusCode{
