@@ -1,10 +1,13 @@
 package com.gear2go.service;
 
+import com.gear2go.properties.Gear2GoProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +18,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
-
-    private static final String SECRET_KEY = "04c13f18adbd7cb5194a3341c6c1afcb2c71d6f5a5ab07f13e6cb659debdbe71";
+    private final Gear2GoProperties gear2GoProperties;
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
@@ -26,7 +29,7 @@ public class JwtService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 *60 * 24 * 7))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .signWith(getSignInKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -67,7 +70,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(gear2GoProperties.getSecretKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
