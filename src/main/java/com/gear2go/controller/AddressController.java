@@ -18,30 +18,36 @@ import java.util.List;
 public class AddressController {
 
     private final AddressService addressService;
+
     @GetMapping("/all")
     public ResponseEntity<List<AddressResponse>> getAllAddresses() {
         return ResponseEntity.ok(addressService.getAllAddresses());
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<AddressResponse> getAddressById(@PathVariable Long id) throws ExceptionWithHttpStatusCode {
         return ResponseEntity.ok(addressService.getAddress(id));
     }
 
+
     @GetMapping()
-    public ResponseEntity<AddressResponse> getAddressById() throws ExceptionWithHttpStatusCode {
+    public ResponseEntity<AddressResponse> getAddress() throws ExceptionWithHttpStatusCode {
         return ResponseEntity.ok(addressService.getAddress());
     }
+
 
     @PostMapping
     public ResponseEntity<AddressResponse> createAddress(@RequestBody CreateAddressRequest createAddressRequest) throws ExceptionWithHttpStatusCode{
         return ResponseEntity.ok(addressService.createAddress(createAddressRequest));
     }
 
+
     @PutMapping
     public ResponseEntity<AddressResponse> updateAddress(@RequestBody UpdateAddressRequest updateAddressRequest) throws ExceptionWithHttpStatusCode{
         return ResponseEntity.ok(addressService.updateAddress(updateAddressRequest));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAddress(@PathVariable Long id) throws ExceptionWithHttpStatusCode{

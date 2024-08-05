@@ -24,22 +24,26 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) throws ExceptionWithHttpStatusCode{
         return ResponseEntity.ok(userService.getUser(id));
     }
+
 
     @PostMapping("/request-recovery")
     public ResponseEntity<String> sendRecoveryMail(@RequestBody RequestPasswordRecoveryRequest requestPasswordRecoveryRequest) throws ExceptionWithHttpStatusCode{
         return ResponseEntity.ok(userService.sendRecoveryMail(requestPasswordRecoveryRequest));
     }
 
-    @PostMapping
+
+    @PostMapping("/register")
     public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
         return ResponseEntity.ok(userService.createUser(createUserRequest));
     }
 
-    @PutMapping
+
+    @PutMapping("/update")
     public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest) throws ExceptionWithHttpStatusCode {
         return ResponseEntity.ok(userService.updateUser(updateUserRequest));
     }
@@ -50,6 +54,7 @@ public class UserController {
         userService.deleteUser();
         return ResponseEntity.noContent().build();
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
