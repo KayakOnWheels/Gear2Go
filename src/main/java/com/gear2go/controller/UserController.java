@@ -46,13 +46,13 @@ public class UserController {
 
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteUser() {
-        userService.deleteUser(null);
+    public ResponseEntity<Void> deleteUser() throws ExceptionWithHttpStatusCode {
+        userService.deleteUser();
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/admin/{id}")
-    public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

@@ -15,28 +15,24 @@ import java.util.List;
 public class OrderController {
 
     OrderService orderService;
+
     @GetMapping
     public ResponseEntity<List<OrderResponse>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrderById(@PathVariable Long id) {
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable Long id) throws ExceptionWithHttpStatusCode{
         return ResponseEntity.ok(orderService.getOrder(id));
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<OrderResponse> createOrderFromCart(@RequestBody CreateOrderRequest createOrderRequest) throws ExceptionWithHttpStatusCode {
         return ResponseEntity.ok(orderService.createOrderFromCart(createOrderRequest));
     }
 
-    @PutMapping
-    public ResponseEntity<OrderResponse> updateOrderStatus(@RequestBody UpdateOrderStatusRequest updateOrderStatusRequest) throws Exception{
-        return ResponseEntity.ok(orderService.updateOrderStatus(updateOrderStatusRequest));
-    }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) throws ExceptionWithHttpStatusCode {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }

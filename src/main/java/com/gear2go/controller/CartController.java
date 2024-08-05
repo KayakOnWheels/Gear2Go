@@ -1,6 +1,5 @@
 package com.gear2go.controller;
 
-import com.gear2go.dto.request.MailRequest;
 import com.gear2go.dto.request.cart.AddProductToCartRequest;
 import com.gear2go.dto.request.cart.UpdateCartRentDatesRequest;
 import com.gear2go.dto.response.CartResponse;
@@ -25,24 +24,14 @@ public class CartController {
     }
 
 
-    @GetMapping("/admin")
-    public ResponseEntity<CartResponse> getCartByUserMail(@RequestBody MailRequest mailRequest) throws ExceptionWithHttpStatusCode {
-        return ResponseEntity.ok(cartService.getUserCart(mailRequest));
-    }
-
     @GetMapping
     public ResponseEntity<CartResponse> getCart() throws ExceptionWithHttpStatusCode {
-        return ResponseEntity.ok(cartService.getUserCart(null));
+        return ResponseEntity.ok(cartService.getUserCart());
     }
 
 
     @PutMapping("/dates")
     public ResponseEntity<CartResponse> updateCartRentDates(@RequestBody UpdateCartRentDatesRequest updateCartRentDatesRequest) throws ExceptionWithHttpStatusCode {
-        return ResponseEntity.ok(cartService.updateCartRentDates(updateCartRentDatesRequest));
-    }
-
-    @PutMapping("/admin/dates")
-    public ResponseEntity<CartResponse> updateCartRentDatesAdmin(@RequestBody UpdateCartRentDatesRequest updateCartRentDatesRequest) throws ExceptionWithHttpStatusCode {
         return ResponseEntity.ok(cartService.updateCartRentDates(updateCartRentDatesRequest));
     }
 
