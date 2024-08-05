@@ -1,0 +1,1 @@
+cart item musi przechowywac price i weight poniewaz order ktory korzysta z cartitem powinine miec dane productu z dnia zlozenia zamowienia.
