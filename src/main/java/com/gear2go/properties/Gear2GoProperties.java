@@ -8,10 +8,11 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 @Setter
-@ConfigurationProperties("gear2go.endpoint")
-public class Endpoints {
+@ConfigurationProperties("gear2go")
+public class Gear2GoProperties {
 
     private String root;
     private String user;
     private String recovery;
+    private String secretKey;
 }

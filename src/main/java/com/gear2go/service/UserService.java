@@ -10,7 +10,7 @@ import com.gear2go.entity.enums.Role;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
 import com.gear2go.exception.UserNotFoundException;
 import com.gear2go.mapper.UserMapper;
-import com.gear2go.properties.Endpoints;
+import com.gear2go.properties.Gear2GoProperties;
 import com.gear2go.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +26,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final AuthenticationService authenticationService;
     private final EmailService emailService;
-    private final Endpoints endpoints;
+    private final Gear2GoProperties gear2GoProperties;
     private final PasswordEncoder passwordEncoder;
 
     public List<UserResponse> getAllUsers() {
