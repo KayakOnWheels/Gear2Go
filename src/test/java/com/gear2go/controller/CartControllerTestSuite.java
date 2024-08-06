@@ -42,19 +42,21 @@ public class CartControllerTestSuite {
     private JwtService jwtService;
     @MockBean
     private UserDetailsService userDetailsService;
-
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    @Test
-    void shouldGetAllCarts() throws Exception {
-        //Given
+    CartResponse prepareData() {
         List<CartItemResponse> cartItemList = List.of(
                 new CartItemResponse(1L, 2L, 3, BigDecimal.valueOf(4.99)),
                 new CartItemResponse(2L, 32L, 5, BigDecimal.valueOf(34.43)));
 
-        List<CartResponse> cartResponseList = List.of(
-                new CartResponse(1L, 1L, LocalDate.now(), LocalDate.now().plusDays(1),
-                        cartItemList, BigDecimal.valueOf(39.42)));
+        return new CartResponse(1L, 1L, LocalDate.now(), LocalDate.now().plusDays(1),
+                cartItemList, BigDecimal.valueOf(39.42));
+    }
+
+    @Test
+    void shouldGetAllCarts() throws Exception {
+        //Given
+        List<CartResponse> cartResponseList = List.of(prepareData());
 
         when(cartService.getAllCarts()).thenReturn(cartResponseList);
 
@@ -72,12 +74,7 @@ public class CartControllerTestSuite {
     @Test
     void shouldGetCurrentUserCart() throws Exception {
         //Given
-        List<CartItemResponse> cartItemList = List.of(
-                new CartItemResponse(1L, 2L, 3, BigDecimal.valueOf(4.99)),
-                new CartItemResponse(2L, 32L, 5, BigDecimal.valueOf(34.43)));
-
-        CartResponse cartResponse = new CartResponse(1L, 1L, LocalDate.now(), LocalDate.now().plusDays(1),
-                cartItemList, BigDecimal.valueOf(39.42));
+        CartResponse cartResponse = prepareData();
 
         when(cartService.getUserCart()).thenReturn(cartResponse);
 
@@ -95,13 +92,7 @@ public class CartControllerTestSuite {
     @Test
     void shouldReturnCartWithUpdatedDates() throws Exception {
         //Given
-        List<CartItemResponse> cartItemList = List.of(
-                new CartItemResponse(1L, 2L, 3, BigDecimal.valueOf(4.99)),
-                new CartItemResponse(2L, 32L, 5, BigDecimal.valueOf(34.43)));
-
-        CartResponse cartResponse = new CartResponse(1L, 1L, LocalDate.now(), LocalDate.now().plusDays(1),
-                cartItemList, BigDecimal.valueOf(39.42));
-
+        CartResponse cartResponse = prepareData();
         UpdateCartRentDatesRequest request = new UpdateCartRentDatesRequest(LocalDate.now(), LocalDate.now().plusDays(1));
 
         when(cartService.updateCartRentDates(request)).thenReturn(cartResponse);
@@ -121,13 +112,7 @@ public class CartControllerTestSuite {
     @Test
     void shouldReturnCartWithAddedProducts() throws Exception {
         //Given
-        List<CartItemResponse> cartItemList = List.of(
-                new CartItemResponse(1L, 2L, 3, BigDecimal.valueOf(4.99)),
-                new CartItemResponse(2L, 32L, 5, BigDecimal.valueOf(34.43)));
-
-        CartResponse cartResponse = new CartResponse(1L, 1L, LocalDate.now(), LocalDate.now().plusDays(1),
-                cartItemList, BigDecimal.valueOf(39.42));
-
+        CartResponse cartResponse = prepareData();
         AddProductToCartRequest request = new AddProductToCartRequest(2L, 2);
 
         when(cartService.addOrSubtractProductToCart(request)).thenReturn(cartResponse);
