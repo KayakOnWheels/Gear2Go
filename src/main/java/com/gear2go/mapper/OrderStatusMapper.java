@@ -1,6 +1,6 @@
 package com.gear2go.mapper;
 
-import com.gear2go.domain.dto.request.order.UpdateOrderStatusRequest;
+import com.gear2go.dto.request.order.UpdateOrderStatusRequest;
 import com.gear2go.entity.enums.OrderStatus;
 import org.springframework.stereotype.Service;
 

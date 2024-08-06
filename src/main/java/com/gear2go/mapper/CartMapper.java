@@ -1,6 +1,6 @@
 package com.gear2go.mapper;
 
-import com.gear2go.domain.dto.response.CartResponse;
+import com.gear2go.dto.response.CartResponse;
 import com.gear2go.entity.Cart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

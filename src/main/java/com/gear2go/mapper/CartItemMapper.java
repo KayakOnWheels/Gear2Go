@@ -1,6 +1,6 @@
 package com.gear2go.mapper;
 
-import com.gear2go.domain.dto.response.CartItemResponse;
+import com.gear2go.dto.response.CartItemResponse;
 import com.gear2go.entity.CartItem;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,9 @@
 package com.gear2go.controller;
 
-import com.gear2go.domain.dto.request.AuthenticationRequest;
-import com.gear2go.domain.dto.request.RegisterRequest;
-import com.gear2go.domain.dto.response.AuthenticationResponse;
+import com.gear2go.dto.request.AuthenticationRequest;
+import com.gear2go.dto.request.RegisterRequest;
+import com.gear2go.dto.request.user.PasswordRecoveryRequest;
+import com.gear2go.dto.response.AuthenticationResponse;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
 import com.gear2go.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +22,22 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 
+
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) throws ExceptionWithHttpStatusCode {
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
 
-    @PostMapping("/authenticate/guest")
-    public ResponseEntity<AuthenticationResponse> register() {
+
+    @PostMapping("/authenticate-guest")
+    public ResponseEntity<AuthenticationResponse> registerGuest() {
         return ResponseEntity.ok(authenticationService.authenticateGuest());
+    }
+
+
+    @PostMapping("/recover-password")
+    public ResponseEntity<String> recover(@RequestBody PasswordRecoveryRequest passwordRecoveryRequest) throws ExceptionWithHttpStatusCode{
+        return ResponseEntity.ok(authenticationService.recoverPassword(passwordRecoveryRequest));
     }
 
 }

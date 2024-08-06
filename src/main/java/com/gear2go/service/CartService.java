@@ -1,9 +1,9 @@
 package com.gear2go.service;
 
-import com.gear2go.domain.dto.request.MailRequest;
-import com.gear2go.domain.dto.request.cart.AddProductToCartRequest;
-import com.gear2go.domain.dto.request.cart.UpdateCartRentDatesRequest;
-import com.gear2go.domain.dto.response.CartResponse;
+import com.gear2go.dto.request.MailRequest;
+import com.gear2go.dto.request.cart.AddProductToCartRequest;
+import com.gear2go.dto.request.cart.UpdateCartRentDatesRequest;
+import com.gear2go.dto.response.CartResponse;
 import com.gear2go.entity.Cart;
 import com.gear2go.entity.CartItem;
 import com.gear2go.entity.Product;
@@ -32,7 +32,6 @@ import java.util.List;
 public class CartService {
 
     private final CartRepository cartRepository;
-    private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
     private final ProductService productService;
@@ -43,12 +42,11 @@ public class CartService {
         return cartMapper.toCartResponseList(cartRepository.findAll());
     }
 
-    public CartResponse getUserCart(@Nullable MailRequest mailRequest) throws ExceptionWithHttpStatusCode {
+    public CartResponse getUserCart() throws ExceptionWithHttpStatusCode {
         User cartOwner;
         Cart cart;
 
-        cartOwner = (mailRequest == null) ? getCartOwner(null) : getCartOwner(mailRequest.mail());
-
+        cartOwner = authenticationService.getAuthenticatedUser().orElseThrow(UserNotFoundException::new);
         cart = cartOwner.getCart();
 
         return cartMapper.toCartResponse(cart);
@@ -56,7 +54,7 @@ public class CartService {
 
     public CartResponse updateCartRentDates(UpdateCartRentDatesRequest updateCartRentDatesRequest) throws ExceptionWithHttpStatusCode {
 
-        User cartOwner = getCartOwner(updateCartRentDatesRequest.mail());
+        User cartOwner = authenticationService.getAuthenticatedUser().orElseThrow(UserNotFoundException::new);
         Cart cart = cartOwner.getCart();
 
         cart.setRentDate(updateCartRentDatesRequest.rentDate());
@@ -72,7 +70,7 @@ public class CartService {
         User cartOwner;
         Cart cart;
 
-        cartOwner = getCartOwner(addProductToCartRequest.userMail());
+        cartOwner = authenticationService.getAuthenticatedUser().orElseThrow(UserNotFoundException::new);
         Product product = productRepository.findById(addProductToCartRequest.productId()).orElseThrow();
 
         if (cartOwner.getCart() == null) {
@@ -113,13 +111,5 @@ public class CartService {
 
         cart.setTotalProductPrice(totalPrice);
         cartRepository.save(cart);
-    }
-
-    private User getCartOwner(@Nullable String mail) throws ExceptionWithHttpStatusCode {
-        Authentication authentication = authenticationService.getAuthentication();
-        User currentUser = userRepository.findUserByMail(authentication.getName()).orElseThrow(UserNotFoundException::new);
-
-        String email = (mail == null) ? currentUser.getMail() : mail;
-        return userRepository.findUserByMail(email).orElseThrow(UserNotFoundException::new);
     }
 }

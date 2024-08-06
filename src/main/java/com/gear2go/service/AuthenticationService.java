@@ -1,9 +1,9 @@
 package com.gear2go.service;
 
-import com.gear2go.domain.dto.request.AuthenticationRequest;
-import com.gear2go.domain.dto.request.RegisterRequest;
-import com.gear2go.domain.dto.request.user.PasswordRecoveryRequest;
-import com.gear2go.domain.dto.response.AuthenticationResponse;
+import com.gear2go.dto.request.AuthenticationRequest;
+import com.gear2go.dto.request.RegisterRequest;
+import com.gear2go.dto.request.user.PasswordRecoveryRequest;
+import com.gear2go.dto.response.AuthenticationResponse;
 import com.gear2go.entity.User;
 import com.gear2go.entity.enums.Role;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
@@ -18,6 +18,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -78,11 +80,12 @@ public class AuthenticationService implements AuthenticationFacade {
         if (jwtService.isTokenValid(passwordRecoveryRequest.token(), temporaryUser)) {
             User userToRecover = userRepository.findUserByMail(passwordRecoveryRequest.mail()).orElseThrow(UserNotFoundException::new);
 
-            userToRecover.setPassword(passwordRecoveryRequest.newPassword());
+            userToRecover.setPassword(passwordEncoder.encode(passwordRecoveryRequest.newPassword()));
             userRepository.save(userToRecover);
             userRepository.delete(temporaryUser);
             return "Success";
         }
+        userRepository.delete(temporaryUser);
         throw new TokenExpiredException();
     }
 
@@ -90,5 +93,9 @@ public class AuthenticationService implements AuthenticationFacade {
     @Override
     public Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    public Optional<User> getAuthenticatedUser() throws UserNotFoundException{
+        return Optional.ofNullable(userRepository.findUserByMail(getAuthentication().getName()).orElseThrow(UserNotFoundException::new));
     }
 }

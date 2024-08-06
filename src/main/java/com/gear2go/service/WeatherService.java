@@ -1,6 +1,6 @@
 package com.gear2go.service;
 
-import com.gear2go.domain.dto.response.WeatherResponse;
+import com.gear2go.dto.response.WeatherResponse;
 import com.gear2go.properties.OpenWeatherProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
