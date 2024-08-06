@@ -42,8 +42,8 @@ public class ProductControllerTestSuite {
     private JwtService jwtService;
     @MockBean
     private UserDetailsService userDetailsService;
-
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
 
     @Test
     void shouldGetAllProducts() throws Exception {
