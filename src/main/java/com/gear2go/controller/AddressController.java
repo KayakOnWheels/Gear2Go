@@ -40,7 +40,7 @@ public class AddressController {
     }
 
 
-    @PostMapping
+    @PostMapping("add")
     @Operation(summary = "Creates address assigned to user making request", description = "Authenticated only")
     public ResponseEntity<AddressResponse> createAddress(@RequestBody CreateAddressRequest createAddressRequest) throws ExceptionWithHttpStatusCode {
         return ResponseEntity.ok(addressService.createAddress(createAddressRequest));
