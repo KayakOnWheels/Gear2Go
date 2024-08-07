@@ -17,16 +17,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-@SpringJUnitWebConfig
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(AddressController.class)
 public class AddressControllerTestSuite {

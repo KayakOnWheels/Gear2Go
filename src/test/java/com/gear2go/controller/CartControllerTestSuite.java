@@ -52,7 +52,7 @@ public class CartControllerTestSuite {
     }
 
     @Test
-    void shouldGetAllCarts() throws Exception {
+    void shouldReturnCartResponseListAndStatus200() throws Exception {
         //Given
         List<CartResponse> cartResponseList = List.of(prepareData());
 
@@ -70,7 +70,7 @@ public class CartControllerTestSuite {
     }
 
     @Test
-    void shouldGetCurrentUserCart() throws Exception {
+    void shouldReturnCartResponseAndStatus200() throws Exception {
         //Given
         CartResponse cartResponse = prepareData();
 
@@ -88,7 +88,7 @@ public class CartControllerTestSuite {
     }
 
     @Test
-    void shouldReturnCartWithUpdatedDates() throws Exception {
+    void shouldReturnCartResponseAndStatus200AfterUpdateCartRequest() throws Exception {
         //Given
         CartResponse cartResponse = prepareData();
         UpdateCartRentDatesRequest request = new UpdateCartRentDatesRequest(LocalDate.now(), LocalDate.now().plusDays(1));
@@ -108,7 +108,7 @@ public class CartControllerTestSuite {
     }
 
     @Test
-    void shouldReturnCartWithAddedProducts() throws Exception {
+    void shouldReturnCartResponseAndStatus200AfterAddProductRequest() throws Exception {
         //Given
         CartResponse cartResponse = prepareData();
         AddProductToCartRequest request = new AddProductToCartRequest(2L, 2);

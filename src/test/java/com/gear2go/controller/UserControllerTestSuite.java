@@ -18,7 +18,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -27,7 +26,6 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-@SpringJUnitWebConfig
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(UserController.class)
 public class UserControllerTestSuite {
@@ -40,11 +38,10 @@ public class UserControllerTestSuite {
     private JwtService jwtService;
     @MockBean
     private UserDetailsService userDetailsService;
-
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Test
-    void shouldGetAllUsers() throws Exception {
+    void shouldReturnUserResponseListAndStatus200() throws Exception {
         //Given
         List<UserResponse> userResponseList = List.of(
                 new UserResponse(1L, "Anthonio", "Antonello", "aa@mail.com"),
@@ -62,8 +59,9 @@ public class UserControllerTestSuite {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("Anthonio"));
     }
 
+
     @Test
-    void shouldGetUserById() throws Exception {
+    void shouldReturnUserResponseAndStatus200AfterGetUserByIdRequest() throws Exception {
         //Given
         List<UserResponse> userResponseList = List.of(
                 new UserResponse(1L, "Anthonio", "Antonello", "aa@mail.com"),
@@ -80,10 +78,12 @@ public class UserControllerTestSuite {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Lawn"));
     }
 
+
     @Test
-    void shouldReturnString() throws Exception {
+    void shouldReturnStringAndStatus200AfterSendRecoveryMailRequest() throws Exception {
         //Given
         RequestPasswordRecoveryRequest request = new RequestPasswordRecoveryRequest("ll@mail.com");
+
         when(userService.sendRecoveryMail(request)).thenReturn("Recovery mail has been sent");
 
         //When & Then
@@ -96,8 +96,9 @@ public class UserControllerTestSuite {
                 .andExpect(MockMvcResultMatchers.content().string("Recovery mail has been sent"));
     }
 
+
     @Test
-    void shouldReturnRegisteredUser() throws Exception {
+    void shouldReturnUserResponseAndStatus200AfterRegisterUserRequest() throws Exception {
         //Given
         List<UserResponse> userResponseList = List.of(
                 new UserResponse(1L, "Anthonio", "Antonello", "aa@mail.com"),
@@ -119,8 +120,9 @@ public class UserControllerTestSuite {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.mail").value("aa@mail.com"));
     }
 
+
     @Test
-    void shouldReturnUpdatedUser() throws Exception {
+    void shouldReturnUserResponseAndStatus200AfterUpdateUserRequest() throws Exception {
         //Given
         List<UserResponse> userResponseList = List.of(
                 new UserResponse(1L, "Anthonio", "Antonello", "aa@mail.com"),
@@ -142,6 +144,7 @@ public class UserControllerTestSuite {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.mail").value("aa@mail.com"));
     }
 
+
     @Test
     void shouldReturnStatus204AfterDelete() throws Exception {
         //Given
@@ -152,6 +155,7 @@ public class UserControllerTestSuite {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
+
 
     @Test
     void shouldReturnStatus204AfterDeleteById() throws Exception {
