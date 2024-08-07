@@ -37,7 +37,7 @@ public class AddressController {
     }
 
 
-    @PostMapping
+    @PostMapping("add")
     public ResponseEntity<AddressResponse> createAddress(@RequestBody CreateAddressRequest createAddressRequest) throws ExceptionWithHttpStatusCode{
         return ResponseEntity.ok(addressService.createAddress(createAddressRequest));
     }
