@@ -6,6 +6,7 @@ import com.gear2go.dto.request.user.UpdateUserRequest;
 import com.gear2go.dto.response.UserResponse;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
 import com.gear2go.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,12 +32,14 @@ public class UserController {
     }
 
 
+    @SecurityRequirements
     @PostMapping("/request-recovery")
     public ResponseEntity<String> sendRecoveryMail(@RequestBody RequestPasswordRecoveryRequest requestPasswordRecoveryRequest) throws ExceptionWithHttpStatusCode{
         return ResponseEntity.ok(userService.sendRecoveryMail(requestPasswordRecoveryRequest));
     }
 
 
+    @SecurityRequirements
     @PostMapping("/register")
     public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
         return ResponseEntity.ok(userService.createUser(createUserRequest));

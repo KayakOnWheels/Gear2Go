@@ -6,6 +6,7 @@ import com.gear2go.dto.request.product.UpdateProductRequest;
 import com.gear2go.dto.response.ProductResponse;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
 import com.gear2go.service.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +20,21 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @SecurityRequirements
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
 
+    @SecurityRequirements
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) throws ExceptionWithHttpStatusCode {
         return ResponseEntity.ok(productService.getProduct(id));
     }
 
 
+    @SecurityRequirements
     @PostMapping("/availability")
     public ResponseEntity<Integer> getProductAvailability(@RequestBody ProductAvailabilityInDateRangeRequest productAvailabilityInDateRangeRequest) throws ExceptionWithHttpStatusCode{
         return ResponseEntity.ok(productService.checkProductAvailabilityInDateRange(productAvailabilityInDateRangeRequest));

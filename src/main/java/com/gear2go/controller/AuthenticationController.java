@@ -6,6 +6,7 @@ import com.gear2go.dto.request.user.PasswordRecoveryRequest;
 import com.gear2go.dto.response.AuthenticationResponse;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
 import com.gear2go.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +18,21 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
+    @SecurityRequirements
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 
 
+    @SecurityRequirements
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) throws ExceptionWithHttpStatusCode {
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
 
 
+    @SecurityRequirements
     @PostMapping("/authenticate-guest")
     public ResponseEntity<AuthenticationResponse> registerGuest() {
         return ResponseEntity.ok(authenticationService.authenticateGuest());

@@ -5,6 +5,7 @@ import com.gear2go.dto.request.address.UpdateAddressRequest;
 import com.gear2go.dto.response.AddressResponse;
 import com.gear2go.entity.Address;
 import com.gear2go.entity.User;
+import com.gear2go.exception.AccessDeniedException;
 import com.gear2go.exception.AddressNotFoundException;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
 import com.gear2go.exception.UserNotFoundException;
@@ -55,7 +56,12 @@ public class AddressService {
     }
 
     public AddressResponse updateAddress(UpdateAddressRequest updateAddressRequest) throws ExceptionWithHttpStatusCode{
+        User user = authenticationService.getAuthenticatedUser().orElseThrow(UserNotFoundException::new);
         Address address = addressRepository.findById(updateAddressRequest.id()).orElseThrow(() -> new AddressNotFoundException(updateAddressRequest.id()));
+
+        if(!address.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException();
+        }
 
         address.setStreet(updateAddressRequest.street());
         address.setBuildingNumber(updateAddressRequest.buildingNumber());
