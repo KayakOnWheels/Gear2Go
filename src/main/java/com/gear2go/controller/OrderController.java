@@ -4,16 +4,18 @@ import com.gear2go.dto.request.order.CreateOrderRequest;
 import com.gear2go.dto.response.OrderResponse;
 import com.gear2go.exception.ExceptionWithHttpStatusCode;
 import com.gear2go.service.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("v1/order")
 public class OrderController {
 
-    OrderService orderService;
+    private final OrderService orderService;
 
     @GetMapping("/all")
     public ResponseEntity<List<OrderResponse>> getAllOrders() {
