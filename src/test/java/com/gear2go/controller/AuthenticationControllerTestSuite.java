@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.gear2go.dto.request.AuthenticationRequest;
 import com.gear2go.dto.request.RegisterRequest;
+import com.gear2go.dto.request.RequestPasswordRecoveryRequest;
 import com.gear2go.dto.request.user.PasswordRecoveryRequest;
 import com.gear2go.dto.response.AuthenticationResponse;
 import com.gear2go.service.AuthenticationService;
@@ -108,6 +109,23 @@ public class AuthenticationControllerTestSuite {
                         .content(objectMapper.writeValueAsString(passwordRecoveryRequest)))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.content().string("Success"));
+    }
+
+    @Test
+    void shouldReturnStringAndStatus200AfterSendRecoveryMailRequest() throws Exception {
+        //Given
+        RequestPasswordRecoveryRequest request = new RequestPasswordRecoveryRequest("ll@mail.com");
+
+        when(authenticationService.sendRecoveryMail(request)).thenReturn("Recovery mail has been sent");
+
+        //When & Then
+        mockMvc.perform((MockMvcRequestBuilders
+                        .post("/v1/auth/request-recovery")
+                        .with(SecurityMockMvcRequestPostProcessors.jwt())
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.content().string("Recovery mail has been sent"));
     }
 
 }

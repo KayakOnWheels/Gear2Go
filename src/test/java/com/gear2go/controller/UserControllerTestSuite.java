@@ -6,6 +6,7 @@ import com.gear2go.dto.request.RequestPasswordRecoveryRequest;
 import com.gear2go.dto.request.user.CreateUserRequest;
 import com.gear2go.dto.request.user.UpdateUserRequest;
 import com.gear2go.dto.response.UserResponse;
+import com.gear2go.service.AuthenticationService;
 import com.gear2go.service.JwtService;
 import com.gear2go.service.UserService;
 import org.hamcrest.Matchers;
@@ -38,6 +39,8 @@ public class UserControllerTestSuite {
     private JwtService jwtService;
     @MockBean
     private UserDetailsService userDetailsService;
+    @MockBean
+    AuthenticationService authenticationService;
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Test
@@ -76,24 +79,6 @@ public class UserControllerTestSuite {
                         .contentType(MediaType.APPLICATION_JSON)))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Lawn"));
-    }
-
-
-    @Test
-    void shouldReturnStringAndStatus200AfterSendRecoveryMailRequest() throws Exception {
-        //Given
-        RequestPasswordRecoveryRequest request = new RequestPasswordRecoveryRequest("ll@mail.com");
-
-        when(userService.sendRecoveryMail(request)).thenReturn("Recovery mail has been sent");
-
-        //When & Then
-        mockMvc.perform((MockMvcRequestBuilders
-                        .post("/v1/user/request-recovery")
-                        .with(SecurityMockMvcRequestPostProcessors.jwt())
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON)))
-                .andExpect(MockMvcResultMatchers.status().is(200))
-                .andExpect(MockMvcResultMatchers.content().string("Recovery mail has been sent"));
     }
 
 

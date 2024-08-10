@@ -33,13 +33,6 @@ public class UserController {
 
 
     @SecurityRequirements
-    @PostMapping("/request-recovery")
-    public ResponseEntity<String> sendRecoveryMail(@RequestBody RequestPasswordRecoveryRequest requestPasswordRecoveryRequest) throws ExceptionWithHttpStatusCode{
-        return ResponseEntity.ok(userService.sendRecoveryMail(requestPasswordRecoveryRequest));
-    }
-
-
-    @SecurityRequirements
     @PostMapping("/register")
     public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
         return ResponseEntity.ok(userService.createUser(createUserRequest));
