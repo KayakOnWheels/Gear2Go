@@ -26,7 +26,6 @@ public class UserService {
     private final UserMapper userMapper;
     private final AuthenticationService authenticationService;
     private final EmailService emailService;
-    private final Gear2GoProperties gear2GoProperties;
     private final PasswordEncoder passwordEncoder;
 
     public List<UserResponse> getAllUsers() {
@@ -56,7 +55,7 @@ public class UserService {
         userToUpdate.setFirstName(updateUserRequest.firstName());
         userToUpdate.setLastName(updateUserRequest.lastName());
         userToUpdate.setMail(updateUserRequest.mail());
-        userToUpdate.setPassword(updateUserRequest.password());
+        userToUpdate.setPassword(passwordEncoder.encode(updateUserRequest.password()));
 
         userRepository.save(userToUpdate);
 
