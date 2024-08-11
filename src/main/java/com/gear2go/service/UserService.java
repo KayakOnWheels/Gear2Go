@@ -25,8 +25,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AuthenticationService authenticationService;
-    private final EmailService emailService;
-    private final Gear2GoProperties gear2GoProperties;
     private final PasswordEncoder passwordEncoder;
 
     public List<UserResponse> getAllUsers() {
@@ -56,7 +54,7 @@ public class UserService {
         userToUpdate.setFirstName(updateUserRequest.firstName());
         userToUpdate.setLastName(updateUserRequest.lastName());
         userToUpdate.setMail(updateUserRequest.mail());
-        userToUpdate.setPassword(updateUserRequest.password());
+        userToUpdate.setPassword(passwordEncoder.encode(updateUserRequest.password()));
 
         userRepository.save(userToUpdate);
 
@@ -70,16 +68,6 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
-    }
-
-    public String sendRecoveryMail(RequestPasswordRecoveryRequest requestPasswordRecoveryRequest) throws ExceptionWithHttpStatusCode {
-        String token = authenticationService.authenticateGuest().getToken();
-
-        Mail mail = new Mail(requestPasswordRecoveryRequest.mail(), "Forgot Password?", token);
-
-        emailService.send(mail);
-
-        return "Recovery mail has been sent";
     }
 
 }

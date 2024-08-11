@@ -76,6 +76,7 @@ public class User implements UserDetails {
         this.role = role;
     }
 
+
     @Override
     public String toString() {
         return "User{" +

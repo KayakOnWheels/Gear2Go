@@ -35,7 +35,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "v1/product").permitAll()
                         .requestMatchers(HttpMethod.GET, "v1/product/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "v1/product/availability").permitAll()
-                        .requestMatchers(HttpMethod.POST, "v1/user/request-recovery").permitAll()
+                        .requestMatchers(HttpMethod.POST, "v1/auth/request-recovery").permitAll()
                         .requestMatchers(HttpMethod.POST, "v1/user/register").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "v1/address").authenticated()

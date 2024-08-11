@@ -1,7 +1,9 @@
 package com.gear2go.service;
 
+import com.gear2go.domain.Mail;
 import com.gear2go.dto.request.AuthenticationRequest;
 import com.gear2go.dto.request.RegisterRequest;
+import com.gear2go.dto.request.RequestPasswordRecoveryRequest;
 import com.gear2go.dto.request.user.PasswordRecoveryRequest;
 import com.gear2go.dto.response.AuthenticationResponse;
 import com.gear2go.entity.User;
@@ -29,6 +31,7 @@ public class AuthenticationService implements AuthenticationFacade {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
         var user = User.builder()
@@ -89,6 +92,15 @@ public class AuthenticationService implements AuthenticationFacade {
         throw new TokenExpiredException();
     }
 
+    public String sendRecoveryMail(RequestPasswordRecoveryRequest requestPasswordRecoveryRequest) throws ExceptionWithHttpStatusCode {
+        String token = authenticateGuest().getToken();
+
+        Mail mail = new Mail(requestPasswordRecoveryRequest.mail(), "Forgot Password?", token);
+
+        emailService.send(mail);
+
+        return "Recovery mail has been sent";
+    }
 
     @Override
     public Authentication getAuthentication() {
