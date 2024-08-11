@@ -1,6 +1,5 @@
 package com.gear2go.service;
 
-import com.gear2go.dto.request.MailRequest;
 import com.gear2go.dto.request.cart.AddProductToCartRequest;
 import com.gear2go.dto.request.cart.UpdateCartRentDatesRequest;
 import com.gear2go.dto.response.CartResponse;
@@ -8,17 +7,11 @@ import com.gear2go.entity.Cart;
 import com.gear2go.entity.CartItem;
 import com.gear2go.entity.Product;
 import com.gear2go.entity.User;
-import com.gear2go.exception.ExceptionWithHttpStatusCode;
-import com.gear2go.exception.ProductNotAvailable;
-import com.gear2go.exception.UserNotFoundException;
+import com.gear2go.exception.*;
 import com.gear2go.mapper.CartMapper;
-import com.gear2go.repository.CartItemRepository;
 import com.gear2go.repository.CartRepository;
 import com.gear2go.repository.ProductRepository;
-import com.gear2go.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.Nullable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -33,7 +26,6 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
-    private final CartItemRepository cartItemRepository;
     private final ProductService productService;
     private final AuthenticationService authenticationService;
     private final CartMapper cartMapper;
@@ -67,25 +59,32 @@ public class CartService {
 
 
     public CartResponse addOrSubtractProductToCart(AddProductToCartRequest addProductToCartRequest) throws ExceptionWithHttpStatusCode {
+        if (addProductToCartRequest.quantity() >= 0) {
+            return addProductToCart(addProductToCartRequest);
+        }
+        return subtractProductFromCart(addProductToCartRequest);
+    }
+
+    public CartResponse addProductToCart(AddProductToCartRequest addProductToCartRequest) throws ExceptionWithHttpStatusCode {
         User cartOwner;
         Cart cart;
 
         cartOwner = authenticationService.getAuthenticatedUser().orElseThrow(UserNotFoundException::new);
-        Product product = productRepository.findById(addProductToCartRequest.productId()).orElseThrow();
+        Product product = productRepository.findById(addProductToCartRequest.productId()).orElseThrow(ProductNotFoundException::new);
 
         if (cartOwner.getCart() == null) {
             cartOwner.setCart(new Cart(cartOwner, LocalDate.now(), LocalDate.now().plusDays(1)));
         }
         cart = cartOwner.getCart();
 
-        if (productService.checkProductAvailabilityInDateRange(addProductToCartRequest.productId(), cart.getRentDate(), cart.getReturnDate()) <= 0) {
+        Integer availability = productService.checkProductAvailabilityInDateRange(addProductToCartRequest.productId(), cart.getRentDate(), cart.getReturnDate());
+        if (availability < addProductToCartRequest.quantity()) {
             throw new ProductNotAvailable();
         }
 
         CartItem cartItem = cart.getCartItemList().stream()
                 .filter(item -> item.getProduct().getId().equals(product.getId())).findFirst().
                 orElse(new CartItem(0, BigDecimal.ZERO, product, cart));
-
 
         if (cartItem.getId() == null) {
             cart.getCartItemList().add(cartItem);
@@ -94,14 +93,42 @@ public class CartService {
         cartItem.setQuantity(cartItem.getQuantity() + addProductToCartRequest.quantity());
         cartItem.setPrice(cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
 
-        cartItemRepository.save(cartItem);
+        cart = updateTotalProductPrice(cart);
+        cartRepository.save(cart);
+        return cartMapper.toCartResponse(cart);
+    }
 
-        updateTotalProductPrice(cart);
+    public CartResponse subtractProductFromCart(AddProductToCartRequest addProductToCartRequest) throws ExceptionWithHttpStatusCode {
+        User cartOwner;
+        Cart cart;
+
+        cartOwner = authenticationService.getAuthenticatedUser().orElseThrow(UserNotFoundException::new);
+        Product product = productRepository.findById(addProductToCartRequest.productId()).orElseThrow(ProductNotFoundException::new);
+
+        if (cartOwner.getCart() == null) {
+            throw new CartNotFoundException();
+        }
+
+        cart = cartOwner.getCart();
+        CartItem cartItem = cart.getCartItemList().stream()
+                .filter(item -> item.getProduct().getId().equals(product.getId())).findFirst().
+                orElseThrow(CartItemNotFoundException::new);
+
+        int newQuantity = cartItem.getQuantity() + addProductToCartRequest.quantity();
+        if (newQuantity <= 0) {
+            cart.getCartItemList().remove(cartItem);
+        } else {
+            cartItem.setQuantity(newQuantity);
+            cartItem.setPrice(cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+        }
+
+        cart = updateTotalProductPrice(cart);
+        cartRepository.save(cart);
         return cartMapper.toCartResponse(cart);
     }
 
 
-    public void updateTotalProductPrice(Cart cart) {
+    public Cart updateTotalProductPrice(Cart cart) {
         BigDecimal totalPrice = new BigDecimal(BigInteger.ZERO);
         for (CartItem cartItem : cart.getCartItemList()) {
             totalPrice = totalPrice.add(cartItem.getPrice());
@@ -110,6 +137,6 @@ public class CartService {
         totalPrice = totalPrice.multiply(BigDecimal.valueOf(period));
 
         cart.setTotalProductPrice(totalPrice);
-        cartRepository.save(cart);
+        return cart;
     }
 }
